@@ -1,0 +1,6 @@
+[toolchain]
+# Qdrant v1.18.2 uses std APIs (cfg_select, vec_into_raw_parts, ptr_as_ref_unchecked) that
+# stabilized in 1.96. Pinned for reproducible builds; bump when we bump Qdrant. Stable (not
+# nightly) — so clyffy can consume TotalRecall (trecall) on the same stable toolchain (no edition-2024 coupling).
+channel = "1.96.0"
+components = ["rustfmt", "clippy"]

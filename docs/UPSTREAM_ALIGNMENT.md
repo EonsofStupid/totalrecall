@@ -23,6 +23,21 @@ potential merge-conflict site — check them after every merge.
 Identity/branding changes (`README.md`, `docs/POAM.md`, `docs/UPSTREAM_README.md`, the `trecall` `[[bin]]` alias,
 this file) are ours permanently and rarely conflict — they live in files upstream doesn't touch.
 
+### Removed upstream files (re-remove on merge)
+
+For fork hygiene / public readiness we deleted Qdrant's project-identity files. Upstream will keep changing some
+of them, so a `git merge vNEW` may surface **modify/delete** conflicts — resolve by re-removing:
+
+```bash
+git rm -r .github/workflows .github/actions .github/ISSUE_TEMPLATE \
+         .github/PULL_REQUEST_TEMPLATE.md .github/review-rules.md \
+         .github/codecov.yml .github/dependabot.yml \
+         docs/CODE_OF_CONDUCT.md docs/logo.svg docs/logo-dark.svg docs/logo-light.svg
+```
+
+`CONTRIBUTING.md` is **replaced** (not deleted) with a fork note — on conflict, keep ours. GitHub Actions is also
+disabled at the repo level as a belt-and-suspenders (so upstream CI can never run even if a workflow returns).
+
 ## Syncing to a new Qdrant release
 
 ```bash

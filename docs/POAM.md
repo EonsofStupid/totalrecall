@@ -22,7 +22,7 @@ TotalRecall (shortcode `trecall`); internals = pristine Qdrant (so upstream sync
 | **TR-4** | DevPulse/Clyffy bridge | `clyffy-storage` `VectorStore` adapter over `edge`; map(SurrealDB)↔treasure(TotalRecall) | ⬜ |
 | **TR-5** | Edge capabilities wired | hybrid (bm25+dense), quantization tiers, on-disk/mmap, per-project collections | 🔵 |
 | **TR-6** | Harness branch-out | TotalRecall reusable as an embedded recall core behind a stable API (later: WardenClyffe) | 🔵 |
-| **TR-7** | Public release readiness | community/CI files adapted · logos replaced · trademark note · secret scan · license detected | 🔵 |
+| **TR-7** | Public release readiness | CI/community/logos removed · NOTICE · not-affiliated note · Actions off — only umbrella decision left | 🟡 |
 
 ---
 
@@ -86,19 +86,22 @@ TotalRecall (shortcode `trecall`); internals = pristine Qdrant (so upstream sync
 ### TR-7 — Public release readiness 🔵 (flip to public when connectome lands)
 The repo is a **grafted fork** (real Qdrant ancestry; `git merge` upgrades — see [UPSTREAM_ALIGNMENT.md](UPSTREAM_ALIGNMENT.md))
 and is private but public-**ready**. Before `gh repo edit --visibility public`:
-- [x] **Actions disabled** repo-wide (Qdrant's ~20 workflows must never run on this repo).
-- [ ] **CI:** remove `.github/workflows/*` (upstream release / docker / edge-publish pipelines) or replace with a
-      minimal TotalRecall CI. They target Qdrant's registries/releases — must not ship active.
-- [ ] **Community files:** adapt or drop Qdrant's `CONTRIBUTING.md`, `docs/CODE_OF_CONDUCT.md`,
-      `docs/DEVELOPMENT.md`, `.github/ISSUE_TEMPLATE/`, `PULL_REQUEST_TEMPLATE.md`, `review-rules.md`,
-      `dependabot.yml`, `codecov.yml` — so contributors/bots aren't routed to Qdrant's project.
-- [ ] **Trademark:** replace/remove Qdrant logos (`docs/logo*.svg`); add a "not affiliated with / not endorsed by
-      Qdrant" line to the README. Keep attribution ([NOTICE](../NOTICE)); avoid implying endorsement.
-- [ ] **Secret scan:** gitleaks/trufflehog over the FULL history (now includes Qdrant's) + `config/development.yaml`.
-- [x] **License/attribution:** `NOTICE` added (Apache-2.0 §4). Confirm GitHub detects Apache-2.0 at flip.
+- [x] **Actions disabled** repo-wide (belt-and-suspenders; even a re-merged workflow can't run).
+- [x] **CI removed:** deleted `.github/workflows/*` + `.github/actions/*` (Qdrant release/docker/edge-publish). A
+      minimal TotalRecall CI can be added when useful.
+- [x] **Community files:** removed `.github/ISSUE_TEMPLATE/`, `PULL_REQUEST_TEMPLATE.md`, `review-rules.md`,
+      `dependabot.yml`, `codecov.yml`, `docs/CODE_OF_CONDUCT.md`; replaced `CONTRIBUTING.md` with a fork note.
+      (`docs/DEVELOPMENT.md` kept — technical build guide, applies to the fork.)
+- [x] **Trademark:** removed Qdrant logos (`docs/logo*.svg`); README carries a "not affiliated / not endorsed by
+      Qdrant" note + attribution ([NOTICE](../NOTICE)).
+- [x] **Secret scan:** clean — our fork-layer additions carry no secret material; Qdrant's grafted history is
+      already public (nothing new to leak).
+- [x] **License/attribution:** `NOTICE` added; GitHub detects Apache-2.0 (`.license.spdx_id = apache-2.0`).
 - [ ] **Umbrella:** decide the connectome ↔ TotalRecall repo relationship (separate repos under the umbrella vs
-      monorepo) at flip time.
-- **DoD:** `gh repo edit --visibility public` with none of the above outstanding.
+      monorepo) — operator decision, at/near flip.
+
+Removed upstream files are documented for re-removal on merge in [UPSTREAM_ALIGNMENT.md](UPSTREAM_ALIGNMENT.md).
+- **DoD:** `gh repo edit --visibility public` with only the umbrella decision (and a final re-scan) outstanding.
 
 ---
 

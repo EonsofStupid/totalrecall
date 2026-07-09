@@ -5,6 +5,11 @@
 baseline that tracks upstream releases while being converted from a standalone
 server into an embeddable engine fused with the SurrealDB host.
 
+> **Relationship to Qdrant.** TotalRecall is an independent fork and is **not affiliated with, endorsed by, or
+> supported by** the Qdrant project or Qdrant Solutions GmbH. "Qdrant" is a trademark of its owners, used here
+> only to describe provenance. Engine-core issues belong upstream at
+> [qdrant/qdrant](https://github.com/qdrant/qdrant). Attribution: [NOTICE](NOTICE).
+
 ## Provenance
 
 | | |

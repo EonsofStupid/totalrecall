@@ -22,7 +22,7 @@ TotalRecall (shortcode `trecall`); internals = pristine Qdrant (so upstream sync
 | **TR-4** | DevPulse/Clyffy bridge | `clyffy-storage` `VectorStore` adapter over `edge`; map(SurrealDB)↔treasure(TotalRecall) | ⬜ |
 | **TR-5** | Edge capabilities wired | hybrid (bm25+dense), quantization tiers, on-disk/mmap, per-project collections | 🔵 |
 | **TR-6** | Harness branch-out | TotalRecall reusable as an embedded recall core behind a stable API (later: WardenClyffe) | 🔵 |
-| **TR-7** | Public release readiness | CI/community/logos removed · NOTICE · not-affiliated note · Actions off — only umbrella decision left | 🟡 |
+| **TR-7** | Public release readiness | readiness DONE (CI/community/logos removed · NOTICE · not-affiliated · Actions off · umbrella=separate-repos); flip gated on connectome | 🟡 |
 
 ---
 
@@ -97,11 +97,14 @@ and is private but public-**ready**. Before `gh repo edit --visibility public`:
 - [x] **Secret scan:** clean — our fork-layer additions carry no secret material; Qdrant's grafted history is
       already public (nothing new to leak).
 - [x] **License/attribution:** `NOTICE` added; GitHub detects Apache-2.0 (`.license.spdx_id = apache-2.0`).
-- [ ] **Umbrella:** decide the connectome ↔ TotalRecall repo relationship (separate repos under the umbrella vs
-      monorepo) — operator decision, at/near flip.
+- [x] **Umbrella (decided 2026-07-08):** **separate repos consumed by an umbrella** — TotalRecall and connectome
+      stay independent repos; the umbrella pulls them as submodules / git-deps (same pattern as clyffy →
+      `deps/trecall`). Keeps Qdrant's grafted history out of the umbrella; each piece versions + goes public on
+      its own cadence.
 
 Removed upstream files are documented for re-removal on merge in [UPSTREAM_ALIGNMENT.md](UPSTREAM_ALIGNMENT.md).
-- **DoD:** `gh repo edit --visibility public` with only the umbrella decision (and a final re-scan) outstanding.
+- **DoD:** readiness is complete; the actual flip (`gh repo edit --visibility public`) + a final secret re-scan
+  happen when connectome lands.
 
 ---
 

@@ -1,6 +1,6 @@
 # Contributing to TotalRecall
 
-TotalRecall (`trecall`) is a private, pre-release **fork** of
+TotalRecall (`trecall`) is a public, pre-release **fork** of
 [Qdrant](https://github.com/qdrant/qdrant), maintained by the project owner. It is **not** the Qdrant project
 and does not accept external contributions yet.
 

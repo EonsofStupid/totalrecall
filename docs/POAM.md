@@ -22,7 +22,7 @@ TotalRecall (shortcode `trecall`); internals = pristine Qdrant (so upstream sync
 | **TR-4** | DevPulse/Clyffy bridge | `clyffy-storage` `VectorStore` adapter over `edge`; map(SurrealDB)↔treasure(TotalRecall) | ⬜ |
 | **TR-5** | Edge capabilities wired | hybrid (bm25+dense), quantization tiers, on-disk/mmap, per-project collections | 🔵 |
 | **TR-6** | Harness branch-out | TotalRecall reusable as an embedded recall core behind a stable API (later: WardenClyffe) | 🔵 |
-| **TR-7** | Public release readiness | readiness DONE (CI/community/logos removed · NOTICE · not-affiliated · Actions off · umbrella=separate-repos); flip gated on connectome | 🟡 |
+| **TR-7** | Public release readiness | **DONE + LIVE** — repo is PUBLIC (2026-07-09); CI/community/logos removed · NOTICE · not-affiliated · Actions off · umbrella=separate-repos · secret scan clean | ✅ |
 
 ---
 
@@ -83,9 +83,9 @@ TotalRecall (shortcode `trecall`); internals = pristine Qdrant (so upstream sync
   WardenClyffe) embed the same core behind the same stable API without touching Qdrant internals.
 - **DoD:** a second harness consumes `trecall` unchanged — proof the core is genuinely reusable.
 
-### TR-7 — Public release readiness 🔵 (flip to public when connectome lands)
+### TR-7 — Public release readiness ✅ (PUBLIC as of 2026-07-09)
 The repo is a **grafted fork** (real Qdrant ancestry; `git merge` upgrades — see [UPSTREAM_ALIGNMENT.md](UPSTREAM_ALIGNMENT.md))
-and is private but public-**ready**. Before `gh repo edit --visibility public`:
+and is now **public** at https://github.com/EonsofStupid/totalrecall. Readiness checklist (all satisfied before the flip):
 - [x] **Actions disabled** repo-wide (belt-and-suspenders; even a re-merged workflow can't run).
 - [x] **CI removed:** deleted `.github/workflows/*` + `.github/actions/*` (Qdrant release/docker/edge-publish). A
       minimal TotalRecall CI can be added when useful.
@@ -103,8 +103,8 @@ and is private but public-**ready**. Before `gh repo edit --visibility public`:
       its own cadence.
 
 Removed upstream files are documented for re-removal on merge in [UPSTREAM_ALIGNMENT.md](UPSTREAM_ALIGNMENT.md).
-- **DoD:** readiness is complete; the actual flip (`gh repo edit --visibility public`) + a final secret re-scan
-  happen when connectome lands.
+- **DoD:** ✅ met — repo flipped public 2026-07-09 (`gh api -X PATCH repos/EonsofStupid/totalrecall -f visibility=public`)
+  after a final secret re-scan (fork-layer additions + whole tree clean).
 
 ---
 

@@ -1,6 +1,6 @@
 # TotalRecall
 
-`trecall` — embedded, tokio-native vector memory core for Clyffy. Private fork of
+`trecall` — embedded, tokio-native vector memory core for Clyffy. Public fork of
 [Qdrant](https://github.com/qdrant/qdrant), maintained as a clean single-branch
 baseline that tracks upstream releases while being converted from a standalone
 server into an embeddable engine fused with the SurrealDB host.

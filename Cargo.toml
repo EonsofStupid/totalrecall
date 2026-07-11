@@ -317,6 +317,13 @@ walkdir = "2.5.0"
 [patch.crates-io]
 tonic = { git = "https://github.com/qdrant/tonic", branch = "v0.14.6-qdrant" }
 
+# The `qdrant` bin declared EXPLICITLY (not left to autobin discovery of src/main.rs). `default-run = "qdrant"`
+# must resolve even when this manifest is parsed as an external DEPENDENCY (autobin discovery is skipped in
+# that mode), otherwise consuming the `segment` library from another workspace fails the whole workspace parse.
+[[bin]]
+name = "qdrant"
+path = "src/main.rs"
+
 # TotalRecall shortcode alias — same entrypoint as the default `qdrant` bin (internals stay pristine Qdrant
 # for diff-based upstream syncs). Lets tooling/scripts invoke `cargo run --bin trecall`.
 [[bin]]

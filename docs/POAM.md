@@ -19,7 +19,7 @@ TotalRecall (shortcode `trecall`); internals = pristine Qdrant (so upstream sync
 | **TR-1** | Upstream alignment discipline | documented diff-sync + baseline-tag convention + drift check | 🟡 |
 | **TR-2** | Embeddable surface (`lib/edge`) | server/consensus feature-gated OFF; `edge` is the stable in-process API | ⬜ |
 | **TR-3** | TotalRecall facade crate | one `trecall` crate re-exporting the `edge` surface as the public contract | ⬜ |
-| **TR-4** | DevPulse/Clyffy bridge | `clyffy-storage` `VectorStore` adapter over `edge`; map(SurrealDB)↔treasure(TotalRecall) | ⬜ |
+| **TR-4** | DevPulse/Clyffy bridge | `clyffy-storage` `VectorStore` adapter over `edge`; map(Connectome)↔treasure(TotalRecall) | ⬜ |
 | **TR-5** | Edge capabilities wired | hybrid (bm25+dense), quantization tiers, on-disk/mmap, per-project collections | 🔵 |
 | **TR-6** | Harness branch-out | TotalRecall reusable as an embedded recall core behind a stable API (later: WardenClyffe) | 🔵 |
 | **TR-7** | Public release readiness | **DONE + LIVE** — repo is PUBLIC (2026-07-09); CI/community/logos removed · NOTICE · not-affiliated · Actions off · umbrella=separate-repos · secret scan clean | ✅ |
@@ -31,7 +31,7 @@ TotalRecall (shortcode `trecall`); internals = pristine Qdrant (so upstream sync
 ### TR-0 — Official fork baseline ✅ (2026-07-02)
 - Qdrant **v1.18.2** (current latest), orphan-rooted single clean commit; no rro branches/tags/history in the repo.
 - Local deltas: `rust-toolchain.toml` stable 1.96; `geo` 0.32 pin in `lib/segment` (one `geo` alongside
-  `surrealdb-core`); LFS artifact removed.
+  `connectome-core`); LFS artifact removed.
 - **Evidence:** `cargo build` full workspace green on GB10 (aarch64, stable 1.96, needs `protoc`); tag
   `qdrant-v1.18.2-baseline`.
 
@@ -65,7 +65,7 @@ TotalRecall (shortcode `trecall`); internals = pristine Qdrant (so upstream sync
 **Objective:** wire TotalRecall into the clyffy recall path as the treasure, behind the port.
 - [ ] **M4.1** — `clyffy-storage/src/adapters/trecall/` implements `VectorStore` over the `trecall` facade
       (feature `trecall`); `cargo check -p clyffy-storage --features trecall` green.
-- [ ] **M4.2** — the fusion layer: SurrealDB (map: graph/relationships/breadcrumbs) resolves the route → TotalRecall
+- [ ] **M4.2** — the fusion layer: Connectome (map: graph/relationships/breadcrumbs) resolves the route → TotalRecall
       (treasure: vectors) does ANN. Kept a **separate, modular** layer (no blur) so the "combine into one true
       TotalRecall core" question stays testable.
 - [ ] **M4.3** — telemetry: `Vsig` recall spans (`gen_ai.*`/`devpulse.*`).

@@ -16,7 +16,7 @@ potential merge-conflict site — check them after every merge.
 | # | Delta | File(s) | Why | Re-verify |
 |---|-------|---------|-----|-----------|
 | 1 | Pin toolchain **stable 1.96** | `rust-toolchain.toml` | Qdrant needs `cfg_select` / `vec_into_raw_parts` / `ptr_as_ref_unchecked` (stabilized 1.96); stable (not nightly) so the embedding host builds on one toolchain | `cargo +1.96 build`; **bump if a newer Qdrant needs a newer stable** |
-| 2 | Pin **`geo` 0.32** | `lib/segment/Cargo.toml` | compile alongside `surrealdb-core` with a single `geo` version (no `[patch]`) | `cargo tree -i geo` shows one version; `cargo test -p segment --lib` |
+| 2 | Pin **`geo` 0.32** | `lib/segment/Cargo.toml` | compile alongside `connectome-core` with a single `geo` version (no `[patch]`) | `cargo tree -i geo` shows one version; `cargo test -p segment --lib` |
 | 3 | Remove LFS test artifact | `tests/e2e_tests/test_data/storage.tar.xz` (+ its `.gitattributes` entries) | keep the repo free of Git-LFS | `git lfs ls-files` empty; no `.gitattributes` LFS lines |
 | 4 | Drop `parking_lot` **`deadlock_detection`** | `Cargo.toml` (`[workspace.dependencies] parking_lot`) | mutually exclusive with `send_guard`, which the in-process embedding host pulls; debug-only, still reachable via the `service_debug` feature | feature list is `["arc_lock", "serde"]`; `service_debug` still compiles |
 

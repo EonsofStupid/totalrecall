@@ -64,7 +64,7 @@ atomicwrites = { workspace = true }
 memmap2 = { workspace = true }
 schemars = { workspace = true }
 log = { workspace = true }
-geo = "0.32.0"  # pinned to match the SurrealDB host (fusion) — segment's geo use is 3 files of stable primitives
+geo = "0.32.0"  # pinned to match the Connectome host (fusion) — segment's geo use is 3 files of stable primitives
 geohash = "0.13.2"
 num-traits = { workspace = true }
 num-derive = "0.4.2"

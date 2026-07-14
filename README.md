@@ -2,7 +2,7 @@
 
 `trecall` — Total Recall is a complete, embedded, tokio-native Advanced RAG engine for Clyffy/DevPulse. It is
 **not** a wrapper or a simple fork — the vector engine foundations were stripped down and rebuilt as a
-purpose-built recall core. Companion KVS: [Connectome](https://github.com/EonsofStupid) (replaces SurrealDB;
+purpose-built recall core. Companion KVS: [Connectome](https://github.com/EonsofStupid/connectome) (replaces SurrealDB;
 provides the graph/relationship layer that feeds the RAG pipeline).
 
 > **Attribution.** The vector-engine layer of TotalRecall is derived from
@@ -27,7 +27,7 @@ TotalRecall is the **recall layer** of the Clyffy intelligence stack — a produ
 | Vector segments | `lib/segment` | HNSW / flat / quantized indices, payload storage, WAL |
 | Sparse / BM25 | `lib/sparse`, `lib/bm25` | inverted index + BM25 scoring |
 | Shard / WAL | `lib/shard`, `lib/wal` | write-ahead log, shard management |
-| Facade | `trecall` bin / future crate | consumer entry-point (`cargo run --bin trecall`) |
+| Facade | `trecall` bin (alias for engine entry-point; `cargo run --bin trecall`) / future standalone crate | consumer entry-point |
 
 The full roadmap (POA&M) is at [docs/POAM.md](docs/POAM.md).
 

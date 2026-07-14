@@ -74,7 +74,7 @@ class TestSnapshotsRecovery:
         config_file = _create_snapshot_config(storage_method, tmp_path)
 
         container_config = QdrantContainerConfig(
-            volumes={str(config_file): {'bind': '/qdrant/config/config.yaml', 'mode': 'ro'}},
+            volumes={str(config_file): {'bind': '/trecall/config/config.yaml', 'mode': 'ro'}},
             additional_params={"extra_hosts": {"host.docker.internal": "host-gateway"}},
         )
         container_info = qdrant_container_factory(container_config)

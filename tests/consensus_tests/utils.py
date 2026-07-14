@@ -201,16 +201,16 @@ def assert_project_root():
     pass
 
 
-def get_qdrant_exec() -> str:
+def get_trecall_exec() -> str:
     if is_coverage_mode():
-        qdrant_exec = PROJECT_ROOT / "target" / "llvm-cov-target" / "debug" / "qdrant"
+        trecall_exec = PROJECT_ROOT / "target" / "llvm-cov-target" / "debug" / "trecall"
     else:
-        qdrant_exec = PROJECT_ROOT / "target" / "debug" / "qdrant"
-    return str(qdrant_exec)
+        trecall_exec = PROJECT_ROOT / "target" / "debug" / "trecall"
+    return str(trecall_exec)
 
 def get_llvm_profile_file() -> str:
     # %p (per-PID) avoids %m's partial-merge corruption when peers are SIGKILLed under -n auto.
-    llvm_profile_file = PROJECT_ROOT / "target" / "llvm-cov-target" / "qdrant-consensus-tests-%p.profraw"
+    llvm_profile_file = PROJECT_ROOT / "target" / "llvm-cov-target" / "trecall-consensus-tests-%p.profraw"
     return str(llvm_profile_file)
 
 
@@ -245,7 +245,7 @@ def start_peer(peer_dir: Path, log_file: str, bootstrap_uri: str, port=None, ext
     print(f"Starting follower peer with bootstrap uri {bootstrap_uri},"
           f" http: http://localhost:{http_port}/cluster, p2p: {p2p_port}")
 
-    args = [get_qdrant_exec()]
+    args = [get_trecall_exec()]
     env = {
         **get_env(p2p_port, grpc_port, http_port),
         **extra_env
@@ -287,7 +287,7 @@ def start_first_peer(peer_dir: Path, log_file: str, port=None, extra_env=None, r
     print(f"\nStarting first peer with uri {bootstrap_uri},"
           f" http: http://localhost:{http_port}/cluster, p2p: {p2p_port}")
 
-    args = [get_qdrant_exec()]
+    args = [get_trecall_exec()]
     env = {
         **get_env(p2p_port, grpc_port, http_port),
         **extra_env
@@ -578,7 +578,7 @@ def check_collection_resharding_operations_count(peer_api_uri: str, collection_n
 
     # TODO(resharding): until resharding release, the resharding operations are not always exposed
     # Once we do release, we can remove the zero fallback here
-    # See: <https://github.com/qdrant/qdrant/pull/4599>
+    
     local_resharding_count = len(collection_cluster_info["resharding_operations"]) if "resharding_operations" in collection_cluster_info else 0
     return local_resharding_count == expected_resharding_operations_count
 

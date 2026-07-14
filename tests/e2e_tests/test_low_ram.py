@@ -21,7 +21,7 @@ class TestLowRam:
         config = QdrantContainerConfig(
             name=f"qdrant-oom-{unique_suffix}",
             mem_limit="128m",
-            volumes={str(storage_from_archive): {'bind': '/qdrant/storage', 'mode': 'rw'}},
+            volumes={str(storage_from_archive): {'bind': '/trecall/storage', 'mode': 'rw'}},
             environment={"QDRANT__STORAGE__HANDLE_COLLECTION_LOAD_ERRORS": "true"},
             remove=False,
             exit_on_error=False  # Don't raise error when Qdrant fails to start
@@ -44,7 +44,7 @@ class TestLowRam:
         print("Starting container in recovery mode...")
         config = QdrantContainerConfig(
             mem_limit="128m",
-            volumes={str(storage_from_archive): {'bind': '/qdrant/storage', 'mode': 'rw'}},
+            volumes={str(storage_from_archive): {'bind': '/trecall/storage', 'mode': 'rw'}},
             environment={
                 "QDRANT__STORAGE__HANDLE_COLLECTION_LOAD_ERRORS": "true",
                 "QDRANT_ALLOW_RECOVERY_MODE": "true"

@@ -125,7 +125,7 @@ def test_validation_iter_batch_named_vectors(collection_name):
     assert 'Validation error' in response.json()["status"]["error"]
 
 
-# Regression for https://github.com/qdrant/qdrant/issues/9045
+# Regression for https://github.com/trecall/issues/9045
 #
 # Upserting an empty vector `[]` is rejected on the synchronous (`wait=true`)
 # path but silently accepted on the asynchronous path: the response is HTTP 200

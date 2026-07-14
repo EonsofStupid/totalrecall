@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# This test checks that Qdrant answers to all API mentioned in README.md as expected
+# This test checks that TotalRecall answers to all API mentioned in README.md as expected
 
 
 set -ex
 
-QDRANT_HOST='localhost:6333'
+TRECALL_HOST='localhost:6333'
 
 # cleanup collection if it exists
-curl -X DELETE "http://$QDRANT_HOST/collections/test_collection" \
+curl -X DELETE "http://$TRECALL_HOST/collections/test_collection" \
   -H 'Content-Type: application/json' \
   --fail -s | jq
 
 # create collection
-curl -X PUT "http://$QDRANT_HOST/collections/test_collection" \
+curl -X PUT "http://$TRECALL_HOST/collections/test_collection" \
   -H 'Content-Type: application/json' \
   --fail -s \
   --data-raw '{
@@ -41,7 +41,7 @@ do
       ]}')
 
   # insert points
-  curl -L -X PUT "http://$QDRANT_HOST/collections/test_collection/points?wait=true" \
+  curl -L -X PUT "http://$TRECALL_HOST/collections/test_collection/points?wait=true" \
     -H 'Content-Type: application/json' \
     --fail -s \
     --data-raw "$PAYLOAD" | jq
@@ -63,7 +63,7 @@ PAYLOAD='
 ';
 
 # insert points
-curl -L -X POST "http://$QDRANT_HOST/collections/test_collection/points/delete?wait=true" \
+curl -L -X POST "http://$TRECALL_HOST/collections/test_collection/points/delete?wait=true" \
   -H 'Content-Type: application/json' \
   --fail -s \
   --data-raw "$PAYLOAD" | jq
@@ -84,7 +84,7 @@ do
       ]}')
 
   # insert points
-  curl -L -X PUT "http://$QDRANT_HOST/collections/test_collection/points?wait=true" \
+  curl -L -X PUT "http://$TRECALL_HOST/collections/test_collection/points?wait=true" \
     -H 'Content-Type: application/json' \
     --fail -s \
     --data-raw "$PAYLOAD" | jq

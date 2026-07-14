@@ -1,14 +1,17 @@
-TotalRecall (trecall)
+TotalRecall
 Copyright 2026 The TotalRecall project (https://github.com/EonsofStupid/totalrecall)
 
-This product is a derivative work of Qdrant, used under the Apache License, Version 2.0.
+This product includes software originally developed as Qdrant (https://github.com/qdrant/qdrant),
+Copyright The Qdrant Authors, licensed under the Apache License, Version 2.0.
 
-  Qdrant — Vector Search Engine
-  Copyright The Qdrant Authors (https://github.com/qdrant/qdrant)
-  Licensed under the Apache License, Version 2.0.
-  Baseline: v1.18.2 (commit 44ad62f8cd69642be5afa6441612525e24a0d063).
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-TotalRecall keeps Qdrant's internal crate names and source pristine; it adds an embeddable
-identity layer and a small set of documented local deltas. The full list of modifications is in
-docs/UPSTREAM_ALIGNMENT.md. All modifications by the TotalRecall project are likewise licensed
-under the Apache License, Version 2.0 (see LICENSE).
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

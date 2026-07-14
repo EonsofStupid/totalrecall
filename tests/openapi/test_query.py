@@ -142,7 +142,7 @@ def test_basic_search(collection_name):
 
 
 # Test basic search with huge limit, it must not panic with allocation failure
-# See: <https://github.com/qdrant/qdrant/issues/5483>
+# See: <https://github.com/trecall/issues/5483>
 def test_basic_search_high_limit(collection_name):
     response = request_with_validation(
         api="/collections/{collection_name}/points/search",

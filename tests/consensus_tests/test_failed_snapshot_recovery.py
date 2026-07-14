@@ -286,7 +286,7 @@ def test_dirty_shard_handling_with_active_replicas(tmp_path: pathlib.Path, trans
     assert len(initial_scroll_result) > 0
 
     # Simulate killing on snapshot recovery (corrupting shard dir and adding a shard initializing flag)
-    # this can happen in practice when a node is killed while shard directory was being moved from /qdrant/snapshots to /qdrant/storage
+    # this can happen in practice when a node is killed while shard directory was being moved from /trecall/snapshots to /trecall/storage
     # the initializing flag is created but never deleted in such cases, when Qdrant restarts it considers it as dirty shard and tries to recover it
     shard_id = 0
     flag_path = shard_initializing_flag(peer_dirs[-1], COLLECTION_NAME, shard_id)

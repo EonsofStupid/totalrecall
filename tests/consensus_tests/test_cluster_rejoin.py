@@ -286,7 +286,7 @@ def rejoin_cluster_test(
 ):
     """
     Parameterized test body, that tests adding new peer after origin peer was removed from the cluster.
-    See: <https://github.com/qdrant/qdrant/issues/5138>
+    See: internal issue #5138
     """
 
     # Start cluster
@@ -536,7 +536,7 @@ def test_replace_running_peer_without_shards_same_uri(tmp_path: pathlib.Path):
     log_file = open(f"{test_log_folder}/peer_extra_replaced.log", "w")
 
     args = [
-        get_qdrant_exec(),
+        get_trecall_exec(),
         "--bootstrap", bootstrap_uri,
         "--uri", extra_peer_p2p_uri,  # same URI as the old peer
     ]

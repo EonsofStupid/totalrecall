@@ -1664,7 +1664,7 @@ def test_discover_batch(query_filter, collection_name):
 
 # Qdrant did panic for some Query API requests when using a vector name that is not existing
 # for the given point. This tests ensures that a proper error response gets returned.
-# See https://github.com/qdrant/qdrant/issues/5208 for more details.
+# See https://github.com/trecall/issues/5208 for more details.
 def test_query_with_missing_vector(collection_name):
     response = request_with_validation(
         api="/collections/{collection_name}/points/query",

@@ -7,14 +7,14 @@ set -ex
 cd "$(dirname "$0")/../"
 
 MODE=$1
-QDRANT_HOST='localhost:6333'
+TRECALL_HOST='localhost:6333'
 export QDRANT__SERVICE__GRPC_PORT="6334"
-export LLVM_PROFILE_FILE="./target/llvm-cov-target/qdrant-openapi-$MODE-%m.profraw"
+export LLVM_PROFILE_FILE="./target/llvm-cov-target/trecall-openapi-$MODE-%m.profraw"
 
 if [ "$COVERAGE" == "1" ]; then
-  QDRANT_EXECUTABLE="./target/llvm-cov-target/debug/qdrant"
+  QDRANT_EXECUTABLE="./target/llvm-cov-target/debug/trecall"
 else
-  QDRANT_EXECUTABLE="./target/debug/qdrant"
+  QDRANT_EXECUTABLE="./target/debug/trecall"
 fi
 
 # Enable distributed mode on demand
@@ -48,7 +48,7 @@ function clear_after_tests()
 trap clear_after_tests SIGINT
 trap clear_after_tests EXIT
 
-until curl --output /dev/null --silent --get --fail http://$QDRANT_HOST/collections; do
+until curl --output /dev/null --silent --get --fail http://$TRECALL_HOST/collections; do
   printf 'waiting for server to start...'
   sleep 5
 done

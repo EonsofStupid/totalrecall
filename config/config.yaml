@@ -1,7 +1,7 @@
 log_level: INFO
 
 # Logging configuration
-# Qdrant logs to stdout. You may configure to also write logs to a file on disk.
+# TotalRecall logs to stdout. You may configure to also write logs to a file on disk.
 # Be aware that this file may grow indefinitely.
 # logger:
 #   # Logging format, supports `text` and `json`
@@ -104,7 +104,7 @@ storage:
 
     # Enable async scorer which uses io_uring when rescoring.
     # Only supported on Linux, must be enabled in your kernel.
-    # See: <https://qdrant.tech/articles/io_uring/#and-what-about-qdrant>
+    # See: <https://github.com/EonsofStupid/totalrecall>
     #async_scorer: false
 
     # Maximum number of collections to load concurrently.
@@ -199,7 +199,7 @@ storage:
   # Default shard transfer method to use if none is defined.
   # If null - don't have a shard transfer preference, choose automatically.
   # If stream_records, snapshot or wal_delta - prefer this specific method.
-  # More info: https://qdrant.tech/documentation/guides/distributed_deployment/#shard-transfer-method
+  # More info: https://github.com/EonsofStupid/totalrecall/blob/main/docs/DEVELOPMENT.md
   shard_transfer_method: null
 
   # Default parameters for collections
@@ -218,7 +218,7 @@ storage:
     # shard_number_per_node: 1
 
     # Default quantization configuration.
-    # More info: https://qdrant.tech/documentation/guides/quantization
+    # More info: https://github.com/EonsofStupid/totalrecall/blob/main/docs/DEVELOPMENT.md
     quantization: null
 
     # Default strict mode parameters for newly created collections.
@@ -328,17 +328,17 @@ service:
   #
   # Uncomment to enable.
   # Prefix for the names of metrics in the /metrics API.
-  # metrics_prefix: qdrant_
+  # metrics_prefix: trecall_
 
   # Allow snapshot recovery from remote HTTP/HTTPS URLs.
   # If disabled, snapshot recovery will only work with local files and uploads.
-  # Disabling this can mitigate SSRF risks in environments where the Qdrant node
+  # Disabling this can mitigate SSRF risks in environments where the TotalRecall node
   # has access to internal resources that should not be reachable by users.
   # Default: true
   # enable_snapshot_url_recovery: true
 
 cluster:
-  # Use `enabled: true` to run Qdrant in distributed deployment mode
+  # Use `enabled: true` to run TotalRecall in distributed deployment mode
   enabled: false
 
   # Configuration of the inter-cluster communication
@@ -365,7 +365,7 @@ cluster:
     compact_wal_entries: 128
 
 # Set to true to prevent service from sending usage statistics to the developers.
-# Read more: https://qdrant.tech/documentation/guides/telemetry
+# Read more: https://github.com/EonsofStupid/totalrecall/blob/main/docs/DEVELOPMENT.md
 telemetry_disabled: false
 
 # TLS configuration.
@@ -393,7 +393,7 @@ tls:
   cert_ttl: 3600
 
 # Audit logging configuration.
-# When enabled, Qdrant writes structured JSON audit log entries for every
+# When enabled, TotalRecall writes structured JSON audit log entries for every
 # access-checked API request.
 #
 # audit:

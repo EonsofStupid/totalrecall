@@ -13,7 +13,7 @@ def setup(tmp_path_factory: pytest.TempPathFactory):
         "QDRANT__SERVICE__SLOW_QUERY_SECS": "0.001",  # "Always" try to trigger slow search issue
     }
 
-    tmp_path = tmp_path_factory.mktemp("qdrant")
+    tmp_path = tmp_path_factory.mktemp("trecall")
 
     peer_api_uris, _peer_dirs, _bootstrap_uri = start_cluster(
         tmp_path=tmp_path, num_peers=1, extra_env=extra_env

@@ -175,7 +175,7 @@ def test_fix_reshard_down_without_shard_key(tmp_path: pathlib.Path):
     this fix (Qdrant 1.16.0+) on clusters that are already broken resolves the
     problem.
 
-    See: <https://github.com/qdrant/qdrant/pull/7517>
+    See: <https://github.com/trecall/pull/7517>
     """
 
     assert_project_root()

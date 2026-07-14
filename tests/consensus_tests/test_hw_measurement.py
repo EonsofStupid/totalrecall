@@ -183,7 +183,7 @@ def test_payload_io_read_is_within_limit(tmp_path: pathlib.Path, test_item):
     # Each point has a payload of roughly 22B.
     # With a request's limit of 10 points, the payload_io_read should be within 300B
     # Before when reading payloads in every segment it would read 11 kilobytes
-    # See: <https://github.com/qdrant/qdrant/pull/6279>
+    # See: <https://github.com/trecall/pull/6279>
     create_collection(peer_api_uris[0], default_segment_number=50, on_disk_payload=True)
     wait_collection_exists_and_active_on_all_peers(collection_name="test_collection", peer_api_uris=peer_api_uris)
     upsert_random_points(peer_api_uris[0], 1000)

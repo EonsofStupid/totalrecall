@@ -174,7 +174,7 @@ def test_shard_key_storage(tmp_path: pathlib.Path):
     Creates cluster with custom sharding. Asserts custom sharding keys are
     loaded correctly on node restart.
 
-    Tests bug: <https://github.com/qdrant/qdrant/pull/5838>
+    Tests bug: <https://github.com/trecall/pull/5838>
     """
     assert_project_root()
 

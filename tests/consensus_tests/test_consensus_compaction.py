@@ -61,7 +61,7 @@ def test_consensus_compaction(tmp_path: pathlib.Path):
     wait_collection_exists_and_active_on_all_peers(collection_name="test_collection", peer_api_uris=[new_url])
 
     # Ensure cluster metadata is consistent on all peers
-    # Failed before <https://github.com/qdrant/qdrant/pull/6014>
+    # Failed before <https://github.com/trecall/pull/6014>
     assert_consistent_metadata_key(peer_api_uris, 'my_metadata', 'My value!')
 
 
@@ -72,8 +72,8 @@ def test_consensus_compaction_shard_keys(tmp_path: pathlib.Path):
     asserts it boots with correct consensus state.
 
     Tests:
-    - <https://github.com/qdrant/qdrant/pull/6209>
-    - <https://github.com/qdrant/qdrant/pull/6212>
+    - (internal PR 6209)
+    - (internal PR 6212)
     """
 
     assert_project_root()
@@ -129,8 +129,8 @@ def test_consensus_compaction_shard_keys(tmp_path: pathlib.Path):
 
     # Validate shard keys on all peers
     # Failed before where the numeric ID would become a string, fixed in:
-    # - <https://github.com/qdrant/qdrant/pull/6209>
-    # - <https://github.com/qdrant/qdrant/pull/6212>
+    # - <https://github.com/trecall/pull/6209>
+    # - <https://github.com/trecall/pull/6212>
     wait_for_shard_keys(peer_api_uris, "test_collection", SHARD_KEYS)
 
 @pytest.mark.parametrize(

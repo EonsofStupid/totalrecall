@@ -1,4 +1,4 @@
-"""Regression test for https://github.com/qdrant/qdrant/issues/8724.
+"""Regression test for https://github.com/trecall/issues/8724.
 
 With `lowercase=false` and a mixed-case custom stopword list, the gRPC path
 unconditionally lowercased custom stopwords while REST preserved them verbatim,

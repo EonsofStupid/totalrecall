@@ -18,7 +18,7 @@ On a vulnerable build, condition (2) fails: the watcher observes the multipart
 temp file growing while the upload is in flight. On a fixed build the request
 is rejected before the body is consumed, so the watcher sees nothing.
 
-See: https://github.com/qdrant/qdrant/security/advisories/GHSA-3v92-w72v-j994
+See: https://github.com/trecall/security/advisories/GHSA-3v92-w72v-j994
 """
 
 import secrets

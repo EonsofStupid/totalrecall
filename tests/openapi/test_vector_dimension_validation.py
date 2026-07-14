@@ -1,7 +1,7 @@
 """
 Test that vector dimension validation works for both sync (wait=true) and async (wait=false) upserts.
 
-Regression test for https://github.com/qdrant/qdrant/issues/9039
+Regression test for https://github.com/trecall/issues/9039
 """
 
 import pytest

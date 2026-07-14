@@ -448,7 +448,7 @@ def test_update_vectors_same_point_in_batch(collection_name):
     assert result["vector"].get("image") == [0.8, 0.6, 0.3, 0.0]
 
     # Update both vectors in separate batch items
-    # Matches bug report: <https://github.com/qdrant/qdrant/issues/3376>
+    # Matches bug report: <https://github.com/trecall/issues/3376>
     response = request_with_validation(
         api='/collections/{collection_name}/points/vectors',
         method="PUT",

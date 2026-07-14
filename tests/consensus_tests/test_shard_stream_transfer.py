@@ -296,7 +296,7 @@ def test_shard_stream_transfer_fast_burst(tmp_path: pathlib.Path):
 # test does not run successfully, the point not found errors cascade into
 # cancelling the shard transfers, and the replica will stay on the source node.
 #
-# Tests bug: <https://github.com/qdrant/qdrant/pull/5991>
+# Tests bug: <https://github.com/trecall/pull/5991>
 #
 # Updates are throttled to prevent overloading the cluster during the test.
 def test_transfer_change_pending_point(tmp_path: pathlib.Path):
@@ -397,7 +397,7 @@ def test_transfer_change_pending_point(tmp_path: pathlib.Path):
 # missed. This test proves all operations in the update queue are properly
 # transferred to the target node, and applied there.
 #
-# See: <https://github.com/qdrant/qdrant/pull/8103>
+# See: <https://github.com/trecall/pull/8103>
 def test_shard_stream_transfer_pending_queue_data_race(tmp_path: pathlib.Path):
     assert_project_root()
 
@@ -495,7 +495,7 @@ def test_shard_stream_transfer_pending_queue_data_race(tmp_path: pathlib.Path):
 # Previously this would be blocked and it would time out causing the test to
 # fail.
 #
-# See: <https://github.com/qdrant/qdrant/pull/8373>
+# See: <https://github.com/trecall/pull/8373>
 def test_shard_transfer_blocking_shard_holder(tmp_path: pathlib.Path):
     assert_project_root()
 

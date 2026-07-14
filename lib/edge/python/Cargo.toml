@@ -1,12 +1,11 @@
 [package]
-name = "qdrant-edge-py"
+name = "trecall-edge-py"
 version = "0.7.2"
-authors = ["Qdrant Team <info@qdrant.tech>"]
 license = "Apache-2.0"
 edition = "2024"
 
 [lib]
-name = "qdrant_edge"
+name = "trecall_edge"
 crate-type = ["cdylib"]
 
 [lints]

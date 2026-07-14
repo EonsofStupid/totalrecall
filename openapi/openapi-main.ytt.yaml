@@ -217,7 +217,7 @@ info:
   version: master
 externalDocs:
   description: Find out more about Qdrant applications and demo
-  url: https://qdrant.tech/documentation/
+  url: https://github.com/EonsofStupid/totalrecall/documentation/
 servers:
   - url: "{protocol}://{hostname}:{port}"
     variables:

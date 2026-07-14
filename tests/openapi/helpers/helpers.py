@@ -116,7 +116,7 @@ def request_with_validation(
     return response
 
 # from client implementation:
-# https://github.com/qdrant/qdrant-client/blob/d18cb1702f4cf8155766c7b32d1e4a68af11cd6a/qdrant_client/hybrid/fusion.py#L6C1-L31C25
+# https://github.com/trecall-client/blob/d18cb1702f4cf8155766c7b32d1e4a68af11cd6a/qdrant_client/hybrid/fusion.py#L6C1-L31C25
 def reciprocal_rank_fusion(
     responses: List[List[Any]], limit: int = 10, weights: List[float] = None
 ) -> List[Any]:

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# This test checks that Qdrant answers to all API mentioned in README.md as expected
+# This test checks that TotalRecall answers to all API mentioned in README.md as expected
 
 set -ex
 
 # Ensure current path is project root
 cd "$(dirname "$0")/../"
 
-QDRANT_HOST=${QDRANT_HOST:-'127.0.0.1:6334'}
+TRECALL_HOST=${TRECALL_HOST:-'127.0.0.1:6334'}
 GRPCURL_PATH="/opt/homebrew/bin/grpcurl"
 
 # Check if local grpcurl exists and is executable
@@ -34,10 +34,10 @@ else
 fi
 
 # Add headers if they exist
-if [ -n "${QDRANT_HOST_HEADERS}" ]; then
+if [ -n "${TRECALL_HOST_HEADERS}" ]; then
     while read h; do
         grpcurl_base+=("-H" "$h")
-    done <<< $(echo "${QDRANT_HOST_HEADERS}" | jq -r 'to_entries|map("\(.key): \(.value)")[]')
+    done <<< $(echo "${TRECALL_HOST_HEADERS}" | jq -r 'to_entries|map("\(.key): \(.value)")[]')
 fi
 
 # Function to execute grpcurl commands
@@ -70,7 +70,7 @@ execute_grpcurl -d '{
    }
  }
 ]
-}' $QDRANT_HOST qdrant.Points/Upsert
+}' $TRECALL_HOST qdrant.Points/Upsert
 
 # Upsert multiple points
 execute_grpcurl -d '{
@@ -115,4 +115,4 @@ execute_grpcurl -d '{
    }
  }
 ]
-}' $QDRANT_HOST qdrant.Points/Upsert
+}' $TRECALL_HOST qdrant.Points/Upsert

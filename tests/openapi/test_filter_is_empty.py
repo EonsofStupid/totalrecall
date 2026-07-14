@@ -72,7 +72,7 @@ def create_collection(collection_name):
 
 def test_filter_is_empty(collection_name):
     """
-    Bug: <https://github.com/qdrant/qdrant/pull/6882>
+    Bug: <https://github.com/trecall/pull/6882>
     """
 
     response = request_with_validation(
@@ -117,7 +117,7 @@ def _scroll_is_empty(collection_name, key):
 
 def test_filter_is_empty_after_clear_and_rebuild():
     """
-    Bug: <https://github.com/qdrant/qdrant/issues/8723>
+    Bug: <https://github.com/trecall/issues/8723>
 
     After `clear_payload` on a point and a subsequent delete+recreate of the payload
     index, `is_empty` must still return points whose payload no longer contains the

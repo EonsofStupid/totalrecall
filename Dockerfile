@@ -15,18 +15,18 @@ FROM --platform=${BUILDPLATFORM:-linux/amd64} tonistiigi/xx AS xx
 
 # Note: using bookworm base image to match GPU runtime image, otherwise we're
 # seeing runtime errors due to libc version mismatch.
-# See: <https://github.com/qdrant/qdrant/pull/7334>
+# Cross-compilation setup
 FROM --platform=${BUILDPLATFORM:-linux/amd64} lukemathwalker/cargo-chef:latest-rust-1.96.0-bookworm  AS chef
 
 
 FROM chef AS planner
-WORKDIR /qdrant
+WORKDIR /trecall
 COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
 
 FROM chef AS builder
-WORKDIR /qdrant
+WORKDIR /trecall
 
 COPY --from=xx / /
 
@@ -103,7 +103,7 @@ ARG JEMALLOC_SYS_WITH_LG_PAGE
 # Enable GPU support
 ARG GPU
 
-COPY --from=planner /qdrant/recipe.json recipe.json
+COPY --from=planner /trecall/recipe.json recipe.json
 # `PKG_CONFIG=...` is a workaround for `xx-cargo` bug for crates using `pkg-config`!
 #
 # https://github.com/tonistiigi/xx/issues/107
@@ -115,7 +115,7 @@ RUN PKG_CONFIG="/usr/bin/$(xx-info)-pkg-config" \
     xx-cargo chef cook --profile $PROFILE ${FEATURES:+--features} $FEATURES --features=stacktrace ${GPU:+--features=gpu} --recipe-path recipe.json
 
 COPY . .
-# Include git commit into Qdrant binary during build
+# Include git commit into TotalRecall binary during build
 ARG GIT_COMMIT_ID
 # `PKG_CONFIG=...` is a workaround for `xx-cargo` bug for crates using `pkg-config`!
 #
@@ -125,45 +125,45 @@ RUN PKG_CONFIG="/usr/bin/$(xx-info)-pkg-config" \
     PATH="$PATH:/opt/mold/bin" \
     RUSTFLAGS="${LINKER:+-C link-arg=-fuse-ld=}$LINKER ${TARGET_CPU:+-C target-cpu=}$TARGET_CPU $RUSTFLAGS" \
     ${JEMALLOC_SYS_WITH_LG_PAGE:+env JEMALLOC_SYS_WITH_LG_PAGE="${JEMALLOC_SYS_WITH_LG_PAGE}"} \
-    xx-cargo build --profile $PROFILE ${FEATURES:+--features} $FEATURES --features=stacktrace ${GPU:+--features=gpu} --bin qdrant \
+    xx-cargo build --profile $PROFILE ${FEATURES:+--features} $FEATURES --features=stacktrace ${GPU:+--features=gpu} --bin trecall \
     && PROFILE_DIR=$(if [ "$PROFILE" = dev ]; then echo debug; else echo $PROFILE; fi) \
-    && mv target/$(xx-cargo --print-target-triple)/$PROFILE_DIR/qdrant /qdrant/qdrant
+    && mv target/$(xx-cargo --print-target-triple)/$PROFILE_DIR/trecall /trecall/trecall
 
 # Download and extract web UI
 RUN mkdir /static && STATIC_DIR=/static ./tools/sync-web-ui.sh
 
 # Generate SBOM
-RUN cargo sbom > qdrant.spdx.json
+RUN cargo sbom > trecall.spdx.json
 
 
 # Dockerfile does not support conditional `FROM` directly.
 # To workaround this limitation, we use a multi-stage build with a different base images which have equal name to ARG value.
 
-# Base image for Qdrant.
-FROM debian:13-slim AS qdrant-cpu
+# Base image for TotalRecall.
+FROM debian:13-slim AS trecall-cpu
 
 
-# Base images for Qdrant with nvidia GPU support.
-FROM nvidia/opengl:1.2-glvnd-devel-ubuntu22.04 AS qdrant-gpu-nvidia
+# Base images for TotalRecall with nvidia GPU support.
+FROM nvidia/opengl:1.2-glvnd-devel-ubuntu22.04 AS trecall-gpu-nvidia
 # Set non-interactive mode for apt-get.
 ENV DEBIAN_FRONTEND=noninteractive
 # Set NVIDIA driver capabilities. By default, all capabilities are disabled.
 ENV NVIDIA_DRIVER_CAPABILITIES compute,graphics,utility
 # Copy Nvidia ICD loader file into the container.
-COPY --from=builder /qdrant/lib/gpu/nvidia_icd.json /etc/vulkan/icd.d/
+COPY --from=builder /trecall/lib/gpu/nvidia_icd.json /etc/vulkan/icd.d/
 # Override maintainer label. Nvidia base image have it's own maintainer label.
-LABEL maintainer="Qdrant Team <info@qdrant.tech>"
+LABEL maintainer="EonsofStupid <https://github.com/EonsofStupid>"
 
 
-# Base images for Qdrant with amd GPU support.
-FROM rocm/dev-ubuntu-22.04 AS qdrant-gpu-amd
+# Base images for TotalRecall with amd GPU support.
+FROM rocm/dev-ubuntu-22.04 AS trecall-gpu-amd
 # Set non-interactive mode for apt-get.
 ENV DEBIAN_FRONTEND=noninteractive
 # Override maintainer label. AMD base image have it's own maintainer label.
-LABEL maintainer="Qdrant Team <info@qdrant.tech>"
+LABEL maintainer="EonsofStupid <https://github.com/EonsofStupid>"
 
 
-FROM qdrant-${GPU:+gpu-}${GPU:-cpu} AS qdrant
+FROM trecall-${GPU:+gpu-}${GPU:-cpu} AS trecall
 
 # Install GPU dependencies
 ARG GPU
@@ -185,7 +185,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /var/cache/debconf/* /var/lib/dpkg/status-old
 
-# Copy Qdrant source files into the container. Useful for debugging.
+# Copy TotalRecall source files into the container. Useful for debugging.
 #
 # To enable, set `SOURCES` to *any* non-empty string. E.g., 1/true/enable/whatever.
 # (Note, that *any* non-empty string would work, so 0/false/disable would enable the option as well.)
@@ -195,10 +195,10 @@ ARG SOURCES
 # like `if [ -n "$SOURCES" ]; then COPY ...; fi`), so we *hack* conditional `COPY` by abusing
 # parameter expansion and `COPY` wildcards support. 😎
 
-ENV DIR=${SOURCES:+/qdrant/src}
+ENV DIR=${SOURCES:+/trecall/src}
 COPY --from=builder ${DIR:-/null?} $DIR/
 
-ENV DIR=${SOURCES:+/qdrant/lib}
+ENV DIR=${SOURCES:+/trecall/lib}
 COPY --from=builder ${DIR:-/null?} $DIR/
 
 ENV DIR=${SOURCES:+/usr/local/cargo/registry/src}
@@ -209,21 +209,21 @@ COPY --from=builder ${DIR:-/null?} $DIR/
 
 ENV DIR=""
 
-ARG APP=/qdrant
+ARG APP=/trecall
 
 ARG USER_ID=0
 
 RUN if [ "$USER_ID" != 0 ]; then \
-        groupadd --gid "$USER_ID" qdrant; \
-        useradd --uid "$USER_ID" --gid "$USER_ID" -m qdrant; \
+        groupadd --gid "$USER_ID" trecall; \
+        useradd --uid "$USER_ID" --gid "$USER_ID" -m trecall; \
         mkdir -p "$APP"/storage "$APP"/snapshots; \
         chown -R "$USER_ID:$USER_ID" "$APP"; \
     fi
 
-COPY --from=builder --chown=$USER_ID:$USER_ID /qdrant/qdrant "$APP"/qdrant
-COPY --from=builder --chown=$USER_ID:$USER_ID /qdrant/qdrant.spdx.json "$APP"/qdrant.spdx.json
-COPY --from=builder --chown=$USER_ID:$USER_ID /qdrant/config "$APP"/config
-COPY --from=builder --chown=$USER_ID:$USER_ID /qdrant/tools/entrypoint.sh "$APP"/entrypoint.sh
+COPY --from=builder --chown=$USER_ID:$USER_ID /trecall/trecall "$APP"/trecall
+COPY --from=builder --chown=$USER_ID:$USER_ID /trecall/trecall.spdx.json "$APP"/trecall.spdx.json
+COPY --from=builder --chown=$USER_ID:$USER_ID /trecall/config "$APP"/config
+COPY --from=builder --chown=$USER_ID:$USER_ID /trecall/tools/entrypoint.sh "$APP"/entrypoint.sh
 COPY --from=builder --chown=$USER_ID:$USER_ID /static "$APP"/static
 
 WORKDIR "$APP"
@@ -236,11 +236,11 @@ ENV TZ=Etc/UTC \
 EXPOSE 6333
 EXPOSE 6334
 
-LABEL org.opencontainers.image.title="Qdrant"
-LABEL org.opencontainers.image.description="Official Qdrant image"
-LABEL org.opencontainers.image.url="https://qdrant.com/"
-LABEL org.opencontainers.image.documentation="https://qdrant.com/docs"
-LABEL org.opencontainers.image.source="https://github.com/qdrant/qdrant"
-LABEL org.opencontainers.image.vendor="Qdrant"
+LABEL org.opencontainers.image.title="TotalRecall"
+LABEL org.opencontainers.image.description="TotalRecall Advanced RAG Engine"
+LABEL org.opencontainers.image.url="https://github.com/EonsofStupid/totalrecall"
+LABEL org.opencontainers.image.documentation="https://github.com/EonsofStupid/totalrecall/blob/main/docs/DEVELOPMENT.md"
+LABEL org.opencontainers.image.source="https://github.com/EonsofStupid/totalrecall"
+LABEL org.opencontainers.image.vendor="EonsofStupid"
 
 CMD ["./entrypoint.sh"]

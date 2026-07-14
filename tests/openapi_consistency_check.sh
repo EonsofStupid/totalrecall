@@ -7,7 +7,7 @@
 # This tests makes sure the generated OpenAPI files are consistent with its
 # sources. If this fails, you probably have to generate the OpenAPI files again.
 #
-# Read more here: https://github.com/qdrant/qdrant/blob/master/docs/DEVELOPMENT.md#rest
+# Read more here: https://github.com/EonsofStupid/totalrecall/blob/main/docs/DEVELOPMENT.md
 
 set -ex
 
@@ -28,7 +28,7 @@ then
 else
     set +x
     echo "ERROR: Generated OpenAPI files are not consistent with files in this repository, see diff above."
-    echo "ERROR: See: https://github.com/qdrant/qdrant/blob/master/docs/DEVELOPMENT.md#rest"
+    echo "ERROR: See: https://github.com/EonsofStupid/totalrecall/blob/main/docs/DEVELOPMENT.md"
     exit 1
 fi
 

@@ -324,7 +324,7 @@ class TestStorageCompatibility:
     def _run_storage_test(self, storage_dir: Path, version: str, qdrant_container_factory) -> tuple[bool, str]:
         """Run storage compatibility test."""
         config = QdrantContainerConfig(
-            volumes={str(storage_dir): {"bind": "/qdrant/storage", "mode": "rw"}},
+            volumes={str(storage_dir): {"bind": "/trecall/storage", "mode": "rw"}},
             exit_on_error=False,
             remove=False,
         )

@@ -4,6 +4,6 @@ TotalRecall Edge is a lightweight, in-process vector search engine designed for 
 
 For remote TotalRecall instances, configure the server endpoint directly.
 
-- Website: https://github.com/EonsofStupid/totalrecall/edge/
-- Documentation: https://github.com/EonsofStupid/totalrecall/documentation/edge/
-- Examples: https://github.com/trecall/tree/dev/lib/edge/python/examples
+- Website: https://github.com/EonsofStupid/totalrecall/tree/main/lib/edge
+- Documentation: https://github.com/EonsofStupid/totalrecall/tree/main/docs
+- Examples: https://github.com/EonsofStupid/totalrecall/tree/main/lib/edge/python/examples

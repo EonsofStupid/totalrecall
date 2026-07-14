@@ -72,8 +72,8 @@ def test_consensus_compaction_shard_keys(tmp_path: pathlib.Path):
     asserts it boots with correct consensus state.
 
     Tests:
-    - (internal PR 6209)
-    - (internal PR 6212)
+
+
     """
 
     assert_project_root()

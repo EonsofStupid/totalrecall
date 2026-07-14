@@ -286,7 +286,7 @@ def rejoin_cluster_test(
 ):
     """
     Parameterized test body, that tests adding new peer after origin peer was removed from the cluster.
-    See: internal issue #5138
+    See: https://github.com/EonsofStupid/totalrecall/issues
     """
 
     # Start cluster

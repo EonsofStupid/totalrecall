@@ -1,7 +1,6 @@
 [package]
 name = "trififo"
 version = "0.0.0"
-authors = ["Qdrant Team <info@qdrant.tech>"]
 license = "Apache-2.0"
 edition = "2024"
 publish = false

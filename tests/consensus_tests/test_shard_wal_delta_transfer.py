@@ -675,7 +675,7 @@ def test_shard_fallback_on_big_diff(tmp_path: pathlib.Path):
 #
 # Test that data on the both sides is consistent
 #
-# Bug: <https://github.com/qdrant/qdrant/pull/7787>
+# Bug: <https://github.com/trecall/pull/7787>
 def test_abort_stream_records_breaks_wal_delta(tmp_path: pathlib.Path):
     assert_project_root()
 

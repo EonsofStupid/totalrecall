@@ -5,7 +5,7 @@ from .helpers.helpers import request_with_validation
 
 def test_malformed_condition(collection_name):
     # Should raise a ValidationError because the condition key is not defined
-    # see https://github.com/qdrant/qdrant/issues/1664
+    # see https://github.com/trecall/issues/1664
     # with pytest.raises(jsonschema.exceptions.ValidationError):
     malformed_condition(collection_name)
 

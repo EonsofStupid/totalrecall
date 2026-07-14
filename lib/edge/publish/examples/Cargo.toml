@@ -3,10 +3,10 @@ name = "examples"
 version = "0.0.0"
 edition = "2024"
 publish = false
-description = "Examples demonstrating how to use the Qdrant Edge library"
+description = "Examples demonstrating how to use the TotalRecall Edge library"
 
 [dependencies]
-qdrant-edge = { path = "../qdrant-edge" }
+trecall-edge = { path = "../trecall-edge" }
 fs-err = "3"
 tempfile = "3"
 ureq = "3"

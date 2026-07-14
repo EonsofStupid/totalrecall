@@ -171,7 +171,7 @@ def test_datetime_indexing(collection_name):
     # create payload
     set_payload(collection_name, {datetime_key: "2015-01-01T00:00:00Z"}, [1])
     set_payload(collection_name, {datetime_key: "2015-02-01T08:00:00+02:00"}, [2])
-    # Use YYYY-MM-DDTHH:MM format (T separator, without seconds) — https://github.com/qdrant/qdrant/issues/8718
+    # Use YYYY-MM-DDTHH:MM format (T separator, without seconds) — https://github.com/trecall/issues/8718
     set_payload(collection_name, {datetime_key: "2015-03-01T12:30"}, [3])
 
     # Create index
@@ -208,7 +208,7 @@ def test_datetime_indexing(collection_name):
         ({"gte": "2015-02-01T06:00:00", "lte": "2015-02-01T06:00:00Z"}, [2]),
         # date_optional_time
         ({"gte": "2015-02-01T06:00:00.000000000", "lte": "2015-02-01T06:00:00.000000000"}, [2]),
-        # YYYY-MM-DDTHH:MM (T separator, without seconds) — https://github.com/qdrant/qdrant/issues/8718
+        # YYYY-MM-DDTHH:MM (T separator, without seconds) — https://github.com/trecall/issues/8718
         ({"gte": "2015-01-01T00:00", "lte": "2015-01-01T00:00"}, [1]),
         ({"gte": "2015-02-01T06:00", "lte": "2015-02-01T06:00"}, [2]),
     ]

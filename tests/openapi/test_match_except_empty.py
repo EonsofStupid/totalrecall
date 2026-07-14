@@ -171,7 +171,7 @@ def test_create_indexes():
 
 def test_match_except_empty_integer_with_index():
     """
-    Bug: https://github.com/qdrant/qdrant/issues/9050
+    Bug: https://github.com/trecall/issues/9050
 
     After creating an integer payload index, `match: {"except": []}` must
     still return all points — same as the non-indexed path. An empty except

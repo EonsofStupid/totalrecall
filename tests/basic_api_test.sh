@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
-# This test checks that Qdrant answers to all API mentioned in README.md as expected
+# This test checks that TotalRecall answers to all API endpoints as expected
 
 set -ex
 
-QDRANT_HOST=${QDRANT_HOST:-'localhost:6333'}
+TRECALL_HOST=${TRECALL_HOST:-'localhost:6333'}
 
-qdrant_host_headers=()
+trecall_host_headers=()
 
-if [ -n "${QDRANT_HOST_HEADERS}" ]; then
+if [ -n "${TRECALL_HOST_HEADERS}" ]; then
   while read h; do
-    qdrant_host_headers+=("-H" "$h")
-  done <<<  $(echo "${QDRANT_HOST_HEADERS}" | jq -r 'to_entries|map("\(.key): \(.value)")[]')
+    trecall_host_headers+=("-H" "$h")
+  done <<<  $(echo "${TRECALL_HOST_HEADERS}" | jq -r 'to_entries|map("\(.key): \(.value)")[]')
 fi
 
 # cleanup collection if it exists
-curl -X DELETE "http://$QDRANT_HOST/collections/test_collection" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -X DELETE "http://$TRECALL_HOST/collections/test_collection" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s | jq
 
 # create collection
-curl -X PUT "http://$QDRANT_HOST/collections/test_collection" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -X PUT "http://$TRECALL_HOST/collections/test_collection" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s \
   --data-raw '{
       "vectors": {
@@ -33,35 +33,35 @@ curl -X PUT "http://$QDRANT_HOST/collections/test_collection" \
       "replication_factor": 2
     }' | jq
 
-curl -L -X PUT  "http://$QDRANT_HOST/collections/test_collection/index" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -L -X PUT  "http://$TRECALL_HOST/collections/test_collection/index" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s \
   --data-raw '{
       "field_name": "city",
       "field_schema": "keyword"
     }' | jq
 
-curl -L -X PUT  "http://$QDRANT_HOST/collections/test_collection/index" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -L -X PUT  "http://$TRECALL_HOST/collections/test_collection/index" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s \
   --data-raw '{
       "field_name": "count",
       "field_schema": "integer"
     }' | jq
 
-curl -L -X PUT  "http://$QDRANT_HOST/collections/test_collection/index" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -L -X PUT  "http://$TRECALL_HOST/collections/test_collection/index" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s \
   --data-raw '{
       "field_name": "coords",
       "field_schema": "geo"
     }' | jq
 
-curl --fail -s "http://$QDRANT_HOST/collections/test_collection" "${qdrant_host_headers[@]-}" | jq
+curl --fail -s "http://$TRECALL_HOST/collections/test_collection" "${trecall_host_headers[@]-}" | jq
 
 # insert points
-curl -L -X PUT "http://$QDRANT_HOST/collections/test_collection/points?wait=true" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -L -X PUT "http://$TRECALL_HOST/collections/test_collection/points?wait=true" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s \
   --data-raw '{
       "points": [
@@ -85,27 +85,27 @@ curl -L -X PUT "http://$QDRANT_HOST/collections/test_collection/points?wait=true
     }' | jq
 
 # retrieve point
-curl -L -X GET "http://$QDRANT_HOST/collections/test_collection/points/2" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -L -X GET "http://$TRECALL_HOST/collections/test_collection/points/2" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s | jq
 
 # retrieve points
-curl -L -X POST "http://$QDRANT_HOST/collections/test_collection/points" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -L -X POST "http://$TRECALL_HOST/collections/test_collection/points" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s \
   --data-raw '{
       "ids": [1, 2]
     }' | jq
 
-SAVED_POINTS_COUNT=$(curl --fail -s "http://$QDRANT_HOST/collections/test_collection" "${qdrant_host_headers[@]}" | jq '.result.points_count')
+SAVED_POINTS_COUNT=$(curl --fail -s "http://$TRECALL_HOST/collections/test_collection" "${trecall_host_headers[@]}" | jq '.result.points_count')
 [[ "$SAVED_POINTS_COUNT" == "6" ]] || {
   echo 'check failed - 6 points expected'
   exit 1
 }
 
 # search points
-curl -L -X POST "http://$QDRANT_HOST/collections/test_collection/points/search" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -L -X POST "http://$TRECALL_HOST/collections/test_collection/points/search" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s \
   --data-raw '{
         "vector": [0.2,0.1,0.9,0.7],
@@ -113,8 +113,8 @@ curl -L -X POST "http://$QDRANT_HOST/collections/test_collection/points/search" 
     }' | jq
 
 # search points batch
-curl -L -X POST "http://$QDRANT_HOST/collections/test_collection/points/search/batch" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -L -X POST "http://$TRECALL_HOST/collections/test_collection/points/search/batch" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s \
   --data-raw '{
     "searches": [
@@ -129,9 +129,9 @@ curl -L -X POST "http://$QDRANT_HOST/collections/test_collection/points/search/b
     ]
   }' | jq
 
-curl -L -X POST "http://$QDRANT_HOST/collections/test_collection/points/search" \
+curl -L -X POST "http://$TRECALL_HOST/collections/test_collection/points/search" \
   --fail -s \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --data-raw '{
       "filter": {
           "should": [
@@ -148,8 +148,8 @@ curl -L -X POST "http://$QDRANT_HOST/collections/test_collection/points/search" 
   }' | jq
 
 # test double forward slash handling
-curl -L -X POST "http://$QDRANT_HOST//collections/test_collection/points/search/" \
-  -H 'Content-Type: application/json' "${qdrant_host_headers[@]}" \
+curl -L -X POST "http://$TRECALL_HOST//collections/test_collection/points/search/" \
+  -H 'Content-Type: application/json' "${trecall_host_headers[@]}" \
   --fail -s \
   --data-raw '{
       "filter": {

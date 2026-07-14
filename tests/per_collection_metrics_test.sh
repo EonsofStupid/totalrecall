@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-# This test checks that Qdrant exposes per-collection metrics when requested via query parameter.
+# This test checks that TotalRecall exposes per-collection metrics when requested via query parameter.
 
 set -e
 
-QDRANT_HOST=${QDRANT_HOST:-'localhost:6333'}
+TRECALL_HOST=${TRECALL_HOST:-'localhost:6333'}
 COLLECTION_NAME="test_collection_metrics"
 
-echo "Using Qdrant host: $QDRANT_HOST"
+echo "Using TotalRecall host: $TRECALL_HOST"
 
 # 1. Cleanup & Create collection
 echo "Creating collection $COLLECTION_NAME..."
 # Attempt to delete collection if it exists, ignore output/errors
-curl -X DELETE "http://$QDRANT_HOST/collections/$COLLECTION_NAME" -s > /dev/null || true
+curl -X DELETE "http://$TRECALL_HOST/collections/$COLLECTION_NAME" -s > /dev/null || true
 
-curl -X PUT "http://$QDRANT_HOST/collections/$COLLECTION_NAME" \
+curl -X PUT "http://$TRECALL_HOST/collections/$COLLECTION_NAME" \
   -H 'Content-Type: application/json' \
   --fail -s \
   --data-raw '{
@@ -26,7 +26,7 @@ curl -X PUT "http://$QDRANT_HOST/collections/$COLLECTION_NAME" \
 
 # 2. Insert points
 echo "Inserting points..."
-curl -X PUT "http://$QDRANT_HOST/collections/$COLLECTION_NAME/points?wait=true" \
+curl -X PUT "http://$TRECALL_HOST/collections/$COLLECTION_NAME/points?wait=true" \
   -H 'Content-Type: application/json' \
   --fail -s \
   --data-raw '{
@@ -39,7 +39,7 @@ curl -X PUT "http://$QDRANT_HOST/collections/$COLLECTION_NAME/points?wait=true" 
 
 # 3. Search points (to generate read metrics)
 echo "Searching points..."
-curl -X POST "http://$QDRANT_HOST/collections/$COLLECTION_NAME/points/search" \
+curl -X POST "http://$TRECALL_HOST/collections/$COLLECTION_NAME/points/search" \
   -H 'Content-Type: application/json' \
   --fail -s \
   --data-raw '{
@@ -50,7 +50,7 @@ curl -X POST "http://$QDRANT_HOST/collections/$COLLECTION_NAME/points/search" \
 
 # 4. Fetch metrics with per_collection=true and verify
 echo "Fetching per-collection metrics..."
-METRICS=$(curl -s --fail "http://$QDRANT_HOST/metrics?per_collection=true")
+METRICS=$(curl -s --fail "http://$TRECALL_HOST/metrics?per_collection=true")
 
 echo "Verifying per-collection metrics..."
 
@@ -64,7 +64,7 @@ fi
 
 # 5. Fetch default metrics (no per_collection) and verify global mode
 echo "Fetching default metrics..."
-DEFAULT_METRICS=$(curl -s --fail "http://$QDRANT_HOST/metrics")
+DEFAULT_METRICS=$(curl -s --fail "http://$TRECALL_HOST/metrics")
 
 # In default mode, rest_responses should NOT have collection label
 if echo "$DEFAULT_METRICS" | grep -q 'rest_responses_total{.*collection='; then
@@ -78,4 +78,4 @@ echo "All per-collection metrics verification passed!"
 
 # Cleanup
 echo "Cleaning up..."
-curl -X DELETE "http://$QDRANT_HOST/collections/$COLLECTION_NAME" -s
+curl -X DELETE "http://$TRECALL_HOST/collections/$COLLECTION_NAME" -s

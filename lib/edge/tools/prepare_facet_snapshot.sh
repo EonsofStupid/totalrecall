@@ -2,9 +2,9 @@
 # Creates snapshot for the `facet_test.rs` example.
 
 SNAPSHOT_DIR="./data/facet_test"
-QDRANT_URL="http://localhost:6333"
+TRECALL_URL="http://localhost:6333"
 COLLECTION_NAME="test_facet"
-CONTAINER_NAME="qdrant-facet-test"
+CONTAINER_NAME="trecall-facet-test"
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -15,7 +15,7 @@ log() { printf "\x1b[33m# %s\x1b[0m\n" "$*"; }
 DOCKER_STARTED=0
 cleanup() {
     log "Dropping collection..."
-    curl -sf -X DELETE "$QDRANT_URL/collections/$COLLECTION_NAME?wait=true" || true
+    curl -sf -X DELETE "$TRECALL_URL/collections/$COLLECTION_NAME?wait=true" || true
 
     if [ "$DOCKER_STARTED" = "1" ]; then
         DOCKER_STARTED=0
@@ -25,32 +25,32 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Add newlines after curl because qdrant's responses aren't newline-terminated
+# Add newlines after curl because trecall's responses aren't newline-terminated
 curl() { command curl "$@"; local rc=$?; echo >&2; return $rc; }
 
 mkdir -p "$SNAPSHOT_DIR"
 
-# Check if Qdrant is already running
-if curl -sf "$QDRANT_URL" >/dev/null 2>&1; then
-    log "Qdrant already running at $QDRANT_URL, skipping docker start"
+# Check if TotalRecall is already running
+if curl -sf "$TRECALL_URL" >/dev/null 2>&1; then
+    log "TotalRecall already running at $TRECALL_URL, skipping docker start"
 else
-    log "Starting Qdrant in Docker..."
+    log "Starting TotalRecall in Docker..."
     DOCKER_STARTED=1
-    docker run -d --name "$CONTAINER_NAME" -p 6333:6333 -p 6334:6334 qdrant/qdrant:latest
-    log "Waiting for Qdrant to start..."
-    curl -sf --retry 30 --retry-delay 1 --retry-all-errors "$QDRANT_URL" >/dev/null
+    docker run -d --name "$CONTAINER_NAME" -p 6333:6333 -p 6334:6334 trecall:latest
+    log "Waiting for TotalRecall to start..."
+    curl -sf --retry 30 --retry-delay 1 --retry-all-errors "$TRECALL_URL" >/dev/null
 fi
 
 log "Dropping collection if it exists..."
-curl -sf -X DELETE "$QDRANT_URL/collections/$COLLECTION_NAME?wait=true"
+curl -sf -X DELETE "$TRECALL_URL/collections/$COLLECTION_NAME?wait=true"
 
 log "Creating collection..."
-curl -sf -X PUT "$QDRANT_URL/collections/$COLLECTION_NAME" \
+curl -sf -X PUT "$TRECALL_URL/collections/$COLLECTION_NAME" \
   -H 'Content-Type: application/json' \
   -d '{"vectors": {"size": 4, "distance": "Dot"}}'
 
 log "Inserting points..."
-curl -sf -X PUT "$QDRANT_URL/collections/$COLLECTION_NAME/points?wait=true" \
+curl -sf -X PUT "$TRECALL_URL/collections/$COLLECTION_NAME/points?wait=true" \
   -H 'Content-Type: application/json' \
   -d '{
     "points": [
@@ -68,22 +68,22 @@ curl -sf -X PUT "$QDRANT_URL/collections/$COLLECTION_NAME/points?wait=true" \
   }'
 
 log "Creating payload indexes..."
-curl -sf -X PUT "$QDRANT_URL/collections/$COLLECTION_NAME/index" \
+curl -sf -X PUT "$TRECALL_URL/collections/$COLLECTION_NAME/index" \
   -H 'Content-Type: application/json' \
   -d '{"field_name": "color", "field_schema": "keyword"}'
 
-curl -sf -X PUT "$QDRANT_URL/collections/$COLLECTION_NAME/index" \
+curl -sf -X PUT "$TRECALL_URL/collections/$COLLECTION_NAME/index" \
   -H 'Content-Type: application/json' \
   -d '{"field_name": "city", "field_schema": "keyword"}'
 
 log "Creating shard snapshot..."
-SNAPSHOT_RESPONSE=$(curl -sf -X POST "$QDRANT_URL/collections/$COLLECTION_NAME/shards/0/snapshots")
+SNAPSHOT_RESPONSE=$(curl -sf -X POST "$TRECALL_URL/collections/$COLLECTION_NAME/shards/0/snapshots")
 SNAPSHOT_NAME=$(echo "$SNAPSHOT_RESPONSE" | jq -r '.result.name')
 log "Snapshot name: $SNAPSHOT_NAME"
 
 log "Downloading snapshot..."
 curl -sf -o "$SNAPSHOT_DIR/shard.snapshot" \
-  "$QDRANT_URL/collections/$COLLECTION_NAME/shards/0/snapshots/$SNAPSHOT_NAME"
+  "$TRECALL_URL/collections/$COLLECTION_NAME/shards/0/snapshots/$SNAPSHOT_NAME"
 
 log "Snapshot saved to $SNAPSHOT_DIR/shard.snapshot"
 

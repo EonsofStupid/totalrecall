@@ -8,7 +8,7 @@ class TestSnapshotsInterferenceWithConsensus:
         {"compose_file": "3-node-cluster.yaml"}
     ], indirect=True)
     def test_snapshot_does_not_block_other_operations(self, qdrant_compose):
-        """Test that creating snapshots does not block other operations - https://github.com/qdrant/qdrant/issues/7489."""
+        """Test that creating snapshots does not block other operations - https://github.com/trecall/issues/7489."""
         client = ClientUtils(host=qdrant_compose[0].host, port=qdrant_compose[0].http_port, timeout=10)
         client.wait_for_server()
         assert client.wait_for_cluster_ready(expected_peers=3), "Cluster did not become ready within timeout"

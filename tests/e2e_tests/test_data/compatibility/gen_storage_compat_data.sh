@@ -2,7 +2,7 @@
 
 set -ex
 
-export QDRANT_HOST="localhost:6333"
+export TRECALL_HOST="localhost:6333"
 
 SCRIPT_DIR=$(realpath "$(dirname "$0")")
 
@@ -27,8 +27,8 @@ if [ $USE_DOCKER -eq 0 ]; then
   cargo build
   ./target/debug/qdrant & PID=$!
 else
-  docker run --rm -it -v $(pwd)/storage:/qdrant/storage debian:12-slim bash -c "rm -rf /qdrant/storage/*"
-  docker run -d --rm --network=host -v $(pwd)/storage:/qdrant/storage --name=gen-storage-compatibility  qdrant/qdrant:$QDRANT_VERSION
+  docker run --rm -it -v $(pwd)/storage:/trecall/storage debian:12-slim bash -c "rm -rf /trecall/storage/*"
+  docker run -d --rm --network=host -v $(pwd)/storage:/trecall/storage --name=gen-storage-compatibility  trecall:$QDRANT_VERSION
 fi
 
 function teardown()
@@ -46,7 +46,7 @@ function teardown()
 trap teardown EXIT
 
 declare retry=0
-until curl --output /dev/null --silent --get --fail http://$QDRANT_HOST/collections; do
+until curl --output /dev/null --silent --get --fail http://$TRECALL_HOST/collections; do
   if ((retry++ < 30)); then
       printf 'waiting for server to start...'
       sleep 1
@@ -64,13 +64,13 @@ sleep 1
 
 # Create snapshot
 SNAPSHOT_NAME=$(
-    curl -X POST "http://$QDRANT_HOST/snapshots" \
+    curl -X POST "http://$TRECALL_HOST/snapshots" \
     -H 'Content-Type: application/json' \
     --fail -s | jq .result.name -r
 )
 
 # Download snapshot
-curl -X GET "http://$QDRANT_HOST/snapshots/$SNAPSHOT_NAME" \
+curl -X GET "http://$TRECALL_HOST/snapshots/$SNAPSHOT_NAME" \
     --fail -s --output "${SCRIPT_DIR}/full-snapshot.snapshot"
 
 teardown

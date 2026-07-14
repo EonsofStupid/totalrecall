@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
-# This test checks that Qdrant answers to all API mentioned in README.md as expected
+# This test checks that TotalRecall answers to all API mentioned in README.md as expected
 
 set -ex
 
 # Ensure current path is project root
 cd "$(dirname "$0")/../"
 
-QDRANT_HOST=${QDRANT_HOST:-'localhost:6334'}
+TRECALL_HOST=${TRECALL_HOST:-'localhost:6334'}
 
 docker_grpcurl=("docker" "run" "--rm" "--network=host" "-v" "${PWD}/lib/api/src/grpc/proto:/proto" "fullstorydev/grpcurl" "-plaintext" "-import-path" "/proto" "-proto" "qdrant.proto")
 
-if [ -n "${QDRANT_HOST_HEADERS}" ]; then
+if [ -n "${TRECALL_HOST_HEADERS}" ]; then
   while read h; do
     docker_grpcurl+=("-H" "$h")
-  done <<<  $(echo "${QDRANT_HOST_HEADERS}" | jq -r 'to_entries|map("\(.key): \(.value)")[]')
+  done <<<  $(echo "${TRECALL_HOST_HEADERS}" | jq -r 'to_entries|map("\(.key): \(.value)")[]')
 fi
 
 "${docker_grpcurl[@]}" -d '{
    "collection_name": "test_collection"
-}' $QDRANT_HOST qdrant.Collections/Delete
+}' $TRECALL_HOST qdrant.Collections/Delete
 
 "${docker_grpcurl[@]}" -d '{
    "collection_name": "test_collection",
@@ -28,9 +28,9 @@ fi
         "distance": "Dot"
       }
    }
-}' $QDRANT_HOST qdrant.Collections/Create
+}' $TRECALL_HOST qdrant.Collections/Create
 
-"${docker_grpcurl[@]}" -d '{}' $QDRANT_HOST qdrant.Collections/List
+"${docker_grpcurl[@]}" -d '{}' $TRECALL_HOST qdrant.Collections/List
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
@@ -54,7 +54,7 @@ fi
     {"id": { "uuid": "98a9a4b1-4ef2-46fb-8315-a97d874fe1d7" }, "vectors": {"vector": {"data": [0.24, 0.18, 0.22, 0.44]}}, "payload": {"count":{"list_value": {"values": [{ "integer_value": 0 }]}}}},
     {"id": { "uuid": "f0e09527-b096-42a8-94e9-ea94d342b925" }, "vectors": {"vector": {"data": [0.35, 0.08, 0.11, 0.44]}}}
   ]
-}' $QDRANT_HOST qdrant.Points/Upsert
+}' $TRECALL_HOST qdrant.Points/Upsert
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
@@ -66,7 +66,7 @@ fi
     }
   },
   "limit": 3
-}' $QDRANT_HOST qdrant.Points/Query
+}' $TRECALL_HOST qdrant.Points/Query
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
@@ -83,7 +83,7 @@ fi
       "limit": 3
     }
   ]
-}' $QDRANT_HOST qdrant.Points/QueryBatch
+}' $TRECALL_HOST qdrant.Points/QueryBatch
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
@@ -97,7 +97,7 @@ fi
   "limit": 3,
   "group_size": 2,
   "group_by": "city"
-}' $QDRANT_HOST qdrant.Points/QueryGroups
+}' $TRECALL_HOST qdrant.Points/QueryGroups
 
 
 "${docker_grpcurl[@]}" -d '{
@@ -122,7 +122,7 @@ fi
     }
   },
   "limit": 3
-}' $QDRANT_HOST qdrant.Points/Query
+}' $TRECALL_HOST qdrant.Points/Query
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
@@ -140,7 +140,7 @@ fi
       }
     ]
   }
-}' $QDRANT_HOST qdrant.Points/Query
+}' $TRECALL_HOST qdrant.Points/Query
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
@@ -154,4 +154,4 @@ fi
       ]
     }
   }
-}' $QDRANT_HOST qdrant.Points/Query
+}' $TRECALL_HOST qdrant.Points/Query

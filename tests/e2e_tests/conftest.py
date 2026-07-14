@@ -67,7 +67,7 @@ def qdrant_image(docker_client: docker.DockerClient, request) -> str:
 
     Direct usage:
         def test_something(qdrant_image):
-            # Uses default tag "qdrant/qdrant:e2e-tests"
+            # Uses default tag "trecall:e2e-tests"
 
     Indirect parametrization:
         @pytest.mark.parametrize("qdrant_image", [
@@ -77,7 +77,7 @@ def qdrant_image(docker_client: docker.DockerClient, request) -> str:
             # Uses custom tag and forces rebuild
 
     Parameters (via indirect parametrization):
-        - tag (str): Custom image tag (default: "qdrant/qdrant:e2e-tests")
+        - tag (str): Custom image tag (default: "trecall:e2e-tests")
         - rebuild_image (bool): Force rebuild even if image exists (default: False)
 
     Returns:
@@ -89,7 +89,7 @@ def qdrant_image(docker_client: docker.DockerClient, request) -> str:
         config = {}
 
     # Determine image tag
-    image_tag = config.get("tag", "qdrant/qdrant:e2e-tests")
+    image_tag = config.get("tag", "trecall:e2e-tests")
     rebuild_image = config.get("rebuild_image", False)
 
     project_root = Path(__file__).parent.parent.parent

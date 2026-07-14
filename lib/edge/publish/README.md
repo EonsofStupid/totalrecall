@@ -1,9 +1,9 @@
-# Qdrant Edge
+# TotalRecall Edge
 
-Qdrant Edge is a lightweight, in-process vector search engine designed for embedded devices, autonomous systems, and mobile agents. It enables on-device retrieval with minimal memory footprint, no background services, and optional synchronization with Qdrant Cloud.
+TotalRecall Edge is a lightweight, in-process vector search engine designed for embedded devices, autonomous systems, and mobile agents. It enables on-device retrieval with minimal memory footprint, no background services, and optional synchronization with a remote TotalRecall instance.
 
-For connecting to remote Qdrant instances, use the [`qdrant-client`](https://crates.io/crates/qdrant-client) crate instead.
+For remote TotalRecall instances, configure the server endpoint directly.
 
-- Website: https://qdrant.tech/edge/
-- Documentation: https://qdrant.tech/documentation/edge/
-- Examples: https://github.com/qdrant/qdrant/tree/dev/lib/edge/publish/examples
+- Website: https://github.com/EonsofStupid/totalrecall/tree/main/lib/edge
+- Documentation: https://github.com/EonsofStupid/totalrecall/tree/main/docs
+- Examples: https://github.com/EonsofStupid/totalrecall/tree/main/lib/edge/publish/examples

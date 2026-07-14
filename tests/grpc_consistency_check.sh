@@ -7,7 +7,7 @@
 # This tests makes sure the generated gRPC files are consistent with its
 # sources. If this fails, you probably have to generate the gRPC files again.
 #
-# Read more here: https://github.com/qdrant/qdrant/blob/master/docs/DEVELOPMENT.md#grpc
+# Read more here: https://github.com/EonsofStupid/totalrecall/blob/main/docs/DEVELOPMENT.md
 
 set -ex
 
@@ -29,7 +29,7 @@ then
 else
     set +x
     echo "ERROR: Generated gRPC file is not consistent with files in this repository, see diff above."
-    echo "ERROR: See: https://github.com/qdrant/qdrant/blob/master/docs/DEVELOPMENT.md#grpc"
+    echo "ERROR: See: https://github.com/EonsofStupid/totalrecall/blob/main/docs/DEVELOPMENT.md"
     exit 1
 fi
 

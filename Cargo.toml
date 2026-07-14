@@ -1,18 +1,17 @@
 [package]
-name = "qdrant"
-version = "1.18.2"
-description = "Qdrant - Vector Search engine"
+name = "trecall"
+version = "0.1.0"
+description = "TotalRecall — Advanced RAG Engine"
 authors = [
-    "Andrey Vasnetsov <andrey@vasnetsov.com>",
-    "Qdrant Team <info@qdrant.tech>",
+    "EonsofStupid <https://github.com/EonsofStupid>",
 ]
 readme = "README.md"
-homepage = "https://qdrant.tech/"
-repository = "https://github.com/qdrant/qdrant"
+homepage = "https://github.com/EonsofStupid/totalrecall"
+repository = "https://github.com/EonsofStupid/totalrecall"
 license = "Apache-2.0"
 edition = "2024"
-rust-version = "1.94"
-default-run = "qdrant"
+rust-version = "1.96"
+default-run = "trecall"
 
 [lints]
 workspace = true
@@ -204,7 +203,7 @@ ahash = { version = "0.8.12", features = ["serde"] }
 anyhow = "1.0.102"
 async-trait = "0.1.89"
 atomicwrites = "0.4.4"
-bincode = "1.3.3" # no upgrade because 2.0.x is much slower https://github.com/qdrant/qdrant/pull/6134
+bincode = "1.3.3" # no upgrade because 2.0.x is much slower (serialization perf regression)
 bitpacking = "0.9.3"
 bytemuck = { version = "1.25.0", features = [
     "derive",
@@ -251,8 +250,8 @@ num_cpus = "1.17"
 object_store = { version = "0.13.2", features = ["aws", "gcp", "azure"] }
 ordered-float = { version = "5.3.0", features = ["serde", "schemars", "bytemuck"] }
 rayon = "1.12.0"
-# Local delta: dropped `deadlock_detection` — it is mutually exclusive with `send_guard`, which the embedding
-# host's (clyffy) dep graph pulls when TotalRecall runs in-process. Debug-only aid, still reachable via the
+# Local: dropped `deadlock_detection` — it is mutually exclusive with `send_guard`, which the embedding
+# host's dep graph pulls when TotalRecall runs in-process. Debug-only aid, still reachable via the
 # `service_debug` feature (which the embedder never enables).
 parking_lot = { version = "0.12.5", features = ["arc_lock", "serde"] }
 ph = "0.8.5"
@@ -317,15 +316,10 @@ walkdir = "2.5.0"
 [patch.crates-io]
 tonic = { git = "https://github.com/qdrant/tonic", branch = "v0.14.6-qdrant" }
 
-# The `qdrant` bin declared EXPLICITLY (not left to autobin discovery of src/main.rs). `default-run = "qdrant"`
-# must resolve even when this manifest is parsed as an external DEPENDENCY (autobin discovery is skipped in
-# that mode), otherwise consuming the `segment` library from another workspace fails the whole workspace parse.
-[[bin]]
-name = "qdrant"
-path = "src/main.rs"
-
-# TotalRecall shortcode alias — same entrypoint as the default `qdrant` bin (internals stay pristine Qdrant
-# for diff-based upstream syncs). Lets tooling/scripts invoke `cargo run --bin trecall`.
+# `trecall` bin — declared EXPLICITLY (not left to autobin discovery of src/main.rs).
+# `default-run = "trecall"` must resolve even when this manifest is parsed as an external
+# DEPENDENCY (autobin discovery is skipped in that mode), otherwise consuming the `segment`
+# library from another workspace fails the whole workspace parse.
 [[bin]]
 name = "trecall"
 path = "src/main.rs"
@@ -415,7 +409,7 @@ opt-level = 3
 opt-level = 3
 
 [package.metadata.deb]
-maintainer = "Qdrant Team <team@qdrant.com>"
+maintainer = "EonsofStupid <https://github.com/EonsofStupid>"
 depends = "$auto"
 default-features = true
 features = ["deb"]
@@ -423,32 +417,32 @@ license-file = "LICENSE"
 section = "database"
 priority = "optional"
 extended-description = """\
-Qdrant is a high-performance vector search engine. It is designed to index and search large collections of high-dimensional vectors.\
+TotalRecall is an Advanced RAG Engine — embedded, tokio-native vector recall with BM25 hybrid retrieval.\
 """
 assets = [
     [
-        "target/release/qdrant",
+        "target/release/trecall",
         "usr/bin/",
         "755",
     ],
     [
         "README.md",
-        "usr/share/doc/qdrant/README",
+        "usr/share/doc/trecall/README",
         "644",
     ],
     [
         "static/*",
-        "var/lib/qdrant/static/",
+        "var/lib/trecall/static/",
         "644",
     ],
     [
         "static/assets/*",
-        "var/lib/qdrant/static/assets/",
+        "var/lib/trecall/static/assets/",
         "644",
     ],
     [
         "config/deb.yaml",
-        "etc/qdrant/config.yaml",
+        "etc/trecall/config.yaml",
         "644",
     ],
 ]

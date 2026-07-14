@@ -3,10 +3,10 @@
 set -eEuo pipefail
 
 
-declare QDRANT_HOST="${QDRANT_HOST:-localhost}"
+declare TRECALL_HOST="${TRECALL_HOST:-localhost}"
 
-declare QDRANT_HTTP_PORT="${QDRANT_HTTP_PORT:-6333}"
-declare QDRANT_GRPC_PORT="${QDRANT_GRPC_PORT:-6334}"
+declare TRECALL_HTTP_PORT="${TRECALL_HTTP_PORT:-6333}"
+declare TRECALL_GRPC_PORT="${TRECALL_GRPC_PORT:-6334}"
 
 
 declare BFB="${BFB-}"
@@ -15,7 +15,7 @@ declare BFB="${BFB-}"
 declare FILESERVER_ADDR="${FILESERVER_ADDR:-127.0.0.1}"
 declare FILESERVER_PORT="${FILESERVER_PORT:-8080}"
 
-# When running Qdrant in Docker on macOS, use `http://host.docker.internal:8080`
+# When running TotalRecall in Docker on macOS, use `http://host.docker.internal:8080`
 # to access *macOS* localhost from inside the container
 declare FILESERVER_URL="${FILESERVER_URL:-http://localhost:8080}"
 
@@ -37,23 +37,23 @@ declare FILESERVER_PID=''
 
 
 function main {
-	load-qdrant-status
+	load-trecall-status
 	trap 'failure $LINENO' ERR
 	trap cleanup EXIT
 	"$@"
 }
 
-function load-qdrant-status {
+function load-trecall-status {
 	if [[ ! $CLUSTER ]]
 	then
-		declare STATUS ; STATUS="$(curl-ok "http://$QDRANT_HOST:$QDRANT_HTTP_PORT/cluster" | jq -r .result.status)"
+		declare STATUS ; STATUS="$(curl-ok "http://$TRECALL_HOST:$TRECALL_HTTP_PORT/cluster" | jq -r .result.status)"
 
 		case "$STATUS" in
 			enabled) CLUSTER=1 ;;
 			disabled) CLUSTER=0 ;;
 
 			*)
-				echo "load-qdrant-status: invalid cluster status $STATUS" >&2
+				echo "load-trecall-status: invalid cluster status $STATUS" >&2
 				return 1
 			;;
 		esac
@@ -441,7 +441,7 @@ function fixture-with-points {
 		if [[ $BFB ]]
 		then
 			"$BFB" \
-				--uri "http://$QDRANT_HOST:$QDRANT_GRPC_PORT" \
+				--uri "http://$TRECALL_HOST:$TRECALL_GRPC_PORT" \
 				--collection-name "$(basename "$(url)")" \
 				--dim 128 \
                 --num-vectors 100000 \
@@ -570,7 +570,7 @@ function url {
 	fi
 
 
-	declare URL="$QDRANT_HOST:$QDRANT_HTTP_PORT"
+	declare URL="$TRECALL_HOST:$TRECALL_HTTP_PORT"
 
 	if (( $# <= 1 ))
 	then

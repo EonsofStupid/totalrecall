@@ -1,5 +1,5 @@
 [project]
-name = "qdrant-test-deps"
+name = "trecall-test-deps"
 version = "0.0.1"
 requires-python = ">=3.10,<4"
 dependencies = [

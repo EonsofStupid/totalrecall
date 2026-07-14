@@ -22,21 +22,21 @@ EOF
 
 for ((node=0; node<NODES; node++))
 do
-	declare SERVICE_NAME=qdrant_node_$node
+	declare SERVICE_NAME=trecall_node_$node
 
 	declare HTTP_PORT=$((BASE_PORT + node * 10 + 3))
 	declare GRPC_PORT=$((BASE_PORT + node * 10 + 4))
 
 	if ((node == 0))
 	then
-		declare COMMAND="./qdrant --uri 'http://$SERVICE_NAME:6335'"
+		declare COMMAND="./trecall --uri 'http://$SERVICE_NAME:6335'"
 	else
-		declare COMMAND="bash -c \"sleep $((10 + node / 10 + RANDOM % 10)) && ./qdrant --bootstrap 'http://qdrant_node_0:6335' --uri 'http://$SERVICE_NAME:6335'\""
+		declare COMMAND="bash -c \"sleep $((10 + node / 10 + RANDOM % 10)) && ./trecall --bootstrap 'http://trecall_node_0:6335' --uri 'http://$SERVICE_NAME:6335'\""
 	fi
 
 	cat <<-EOF
 	  $SERVICE_NAME:
-	    image: qdrant/qdrant:latest
+	    image: trecall:latest
 	    command: $COMMAND
 	    restart: always
 	    environment:

@@ -3,7 +3,7 @@
 The disk-usage gate samples the filesystem hosting Qdrant storage with a 5s
 TTL cache, so the test has to be patient on both sides:
 
-1. Boot Qdrant with `/qdrant/storage` backed by a small tmpfs so the gate is
+1. Boot Qdrant with `/trecall/storage` backed by a small tmpfs so the gate is
    reachable with a modest amount of data.
 2. Create a collection and turn strict mode on with a disk threshold well
    below the tmpfs capacity.
@@ -104,7 +104,7 @@ class TestStrictModeDisk:
             name=f"qdrant-sm-disk-{uuid.uuid4().hex[:8]}",
             mounts=[
                 Mount(
-                    target="/qdrant/storage",
+                    target="/trecall/storage",
                     source=None,
                     type="tmpfs",
                     tmpfs_size=TMPFS_BYTES,

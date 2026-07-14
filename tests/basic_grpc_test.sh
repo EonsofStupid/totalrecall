@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
-# This test checks that Qdrant answers to all API mentioned in README.md as expected
+# This test checks that TotalRecall answers to all API mentioned in README.md as expected
 
 set -ex
 
 # Ensure current path is project root
 cd "$(dirname "$0")/../"
 
-QDRANT_HOST=${QDRANT_HOST:-'localhost:6334'}
+TRECALL_HOST=${TRECALL_HOST:-'localhost:6334'}
 
 docker_grpcurl=("docker" "run" "--rm" "--network=host" "-v" "${PWD}/lib/api/src/grpc/proto:/proto" "fullstorydev/grpcurl" "-plaintext" "-import-path" "/proto" "-proto" "qdrant.proto")
 
-if [ -n "${QDRANT_HOST_HEADERS}" ]; then
+if [ -n "${TRECALL_HOST_HEADERS}" ]; then
   while read h; do
     docker_grpcurl+=("-H" "$h")
-  done <<<  $(echo "${QDRANT_HOST_HEADERS}" | jq -r 'to_entries|map("\(.key): \(.value)")[]')
+  done <<<  $(echo "${TRECALL_HOST_HEADERS}" | jq -r 'to_entries|map("\(.key): \(.value)")[]')
 fi
 
 "${docker_grpcurl[@]}" -d '{
    "collection_name": "test_collection"
-}' $QDRANT_HOST qdrant.Collections/Delete
+}' $TRECALL_HOST qdrant.Collections/Delete
 
 "${docker_grpcurl[@]}" -d '{
    "collection_name": "test_collection",
@@ -37,9 +37,9 @@ fi
         }
       }
    }
-}' $QDRANT_HOST qdrant.Collections/Create
+}' $TRECALL_HOST qdrant.Collections/Create
 
-"${docker_grpcurl[@]}" -d '{}' $QDRANT_HOST qdrant.Collections/List
+"${docker_grpcurl[@]}" -d '{}' $TRECALL_HOST qdrant.Collections/List
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
@@ -63,7 +63,7 @@ fi
     {"id": { "uuid": "98a9a4b1-4ef2-46fb-8315-a97d874fe1d7" }, "vectors": {"vector": {"data": [0.24, 0.18, 0.22, 0.44]}}, "payload": {"count":{"list_value": {"values": [{ "integer_value": 0 }]}}}},
     {"id": { "uuid": "f0e09527-b096-42a8-94e9-ea94d342b925" }, "vectors": {"vector": {"data": [0.35, 0.08, 0.11, 0.44]}}}
   ]
-}' $QDRANT_HOST qdrant.Points/Upsert
+}' $TRECALL_HOST qdrant.Points/Upsert
 
 # Upsert point with empty payload
 "${docker_grpcurl[@]}" -d '{
@@ -75,7 +75,7 @@ fi
       "payload": {}
     }
   ]
-}' $QDRANT_HOST qdrant.Points/Upsert
+}' $TRECALL_HOST qdrant.Points/Upsert
 
 # Retrieve point by ID
 response=$("${docker_grpcurl[@]}" -d '{
@@ -83,7 +83,7 @@ response=$("${docker_grpcurl[@]}" -d '{
   "with_payload": {"enable": true},
   "with_vectors": {"enable": true},
   "ids": [{ "num": 1 }]
-}' $QDRANT_HOST qdrant.Points/Get)
+}' $TRECALL_HOST qdrant.Points/Get)
 
 payload_exists=$(echo "$response" | jq '(.result[0].payload != null)')
 
@@ -113,7 +113,7 @@ fi
       }
     }
   ]
-}' $QDRANT_HOST qdrant.Points/Upsert 2>&1 | grep -q "Validation error in body" || {
+}' $TRECALL_HOST qdrant.Points/Upsert 2>&1 | grep -q "Validation error in body" || {
   echo "Expected validation error not returned for invalid sparse vector"
   exit 1
 }
@@ -140,7 +140,7 @@ fi
       }
     }
   ]
-}' $QDRANT_HOST qdrant.Points/Upsert
+}' $TRECALL_HOST qdrant.Points/Upsert
 
 # Create payload index
 "${docker_grpcurl[@]}" -d '{
@@ -149,15 +149,15 @@ fi
   "field_type": 0,
   "field_index_params": { "keyword_index_params": {} },
   "wait": true
-}' $QDRANT_HOST qdrant.Points/CreateFieldIndex
+}' $TRECALL_HOST qdrant.Points/CreateFieldIndex
 
-"${docker_grpcurl[@]}" -d '{ "collection_name": "test_collection" }' $QDRANT_HOST qdrant.Collections/Get
+"${docker_grpcurl[@]}" -d '{ "collection_name": "test_collection" }' $TRECALL_HOST qdrant.Collections/Get
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
   "vector": [0.2,0.1,0.9,0.7],
   "limit": 3
-}' $QDRANT_HOST qdrant.Points/Search
+}' $TRECALL_HOST qdrant.Points/Search
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
@@ -175,7 +175,7 @@ fi
   },
   "vector": [0.2,0.1,0.9,0.7],
   "limit": 3
-}' $QDRANT_HOST qdrant.Points/Search
+}' $TRECALL_HOST qdrant.Points/Search
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
@@ -193,19 +193,19 @@ fi
       }
     ]
   }
-}' $QDRANT_HOST qdrant.Points/Scroll
+}' $TRECALL_HOST qdrant.Points/Scroll
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
   "with_vectors": {"enable": true},
   "ids": [{ "num": 2 }, { "num": 3 }, { "num": 4 }]
-}' $QDRANT_HOST qdrant.Points/Get
+}' $TRECALL_HOST qdrant.Points/Get
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
   "positive": [{ "num": 1 }],
   "negative": [{ "num": 2 }]
-}' $QDRANT_HOST qdrant.Points/Recommend
+}' $TRECALL_HOST qdrant.Points/Recommend
 
 # old format
 "${docker_grpcurl[@]}" -d '{
@@ -218,7 +218,7 @@ fi
     }
   },
   "limit": 1
-}' $QDRANT_HOST qdrant.Points/Discover
+}' $TRECALL_HOST qdrant.Points/Discover
 
 # new format
 "${docker_grpcurl[@]}" -d '{
@@ -233,13 +233,13 @@ fi
     }
   },
   "limit": 1
-}' $QDRANT_HOST qdrant.Points/Discover
+}' $TRECALL_HOST qdrant.Points/Discover
 
 # city facet
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
   "key": "city"
-}' $QDRANT_HOST qdrant.Points/Facet
+}' $TRECALL_HOST qdrant.Points/Facet
 
 # create alias
 "${docker_grpcurl[@]}" -d '{
@@ -251,14 +251,14 @@ fi
       }
     }
   ]
-}' $QDRANT_HOST qdrant.Collections/UpdateAliases
+}' $TRECALL_HOST qdrant.Collections/UpdateAliases
 
 # search via alias
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_alias",
   "vector": [0.2,0.1,0.9,0.7],
   "limit": 3
-}' $QDRANT_HOST qdrant.Points/Search
+}' $TRECALL_HOST qdrant.Points/Search
 
 # rename alias
 "${docker_grpcurl[@]}" -d '{
@@ -270,14 +270,14 @@ fi
       }
     }
   ]
-}' $QDRANT_HOST qdrant.Collections/UpdateAliases
+}' $TRECALL_HOST qdrant.Collections/UpdateAliases
 
 # search via renamed alias
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "new_test_alias",
   "vector": [0.2,0.1,0.9,0.7],
   "limit": 3
-}' $QDRANT_HOST qdrant.Points/Search
+}' $TRECALL_HOST qdrant.Points/Search
 
 # delete alias
 "${docker_grpcurl[@]}" -d '{
@@ -288,7 +288,7 @@ fi
       }
     }
   ]
-}' $QDRANT_HOST qdrant.Collections/UpdateAliases
+}' $TRECALL_HOST qdrant.Collections/UpdateAliases
 
 # create bool index
 "${docker_grpcurl[@]}" -d '{
@@ -296,7 +296,7 @@ fi
   "field_name": "bool_field",
   "field_type": 5,
   "field_index_params": { "bool_index_params": {} }
-}' $QDRANT_HOST qdrant.Points/CreateFieldIndex
+}' $TRECALL_HOST qdrant.Points/CreateFieldIndex
 
 "${docker_grpcurl[@]}" -d '{
   "collection_name": "test_collection",
@@ -305,7 +305,7 @@ fi
     "include": {"fields": ["population"]}
   },
   "ids": [{ "num": 1 }]
-}' $QDRANT_HOST qdrant.Points/Get
+}' $TRECALL_HOST qdrant.Points/Get
 
 # The following must return a validation error
 set +e
@@ -320,7 +320,7 @@ response=$(
                 "positive": [{ "num": 1 }]
             }
         ]
-    }' $QDRANT_HOST qdrant.Points/RecommendBatch 2>&1
+    }' $TRECALL_HOST qdrant.Points/RecommendBatch 2>&1
 )
 if [[ $response != *"Validation error in body"* ]]; then
     echo Unexpected response, expected validation error: $response
@@ -329,28 +329,28 @@ fi
 set -e
 
 # use the reflection service to inspect the full API
-"${docker_grpcurl[@]}" $QDRANT_HOST describe
+"${docker_grpcurl[@]}" $TRECALL_HOST describe
 
 # use the reflection service to inspect each advertised service
-"${docker_grpcurl[@]}" $QDRANT_HOST describe qdrant.Collections
-"${docker_grpcurl[@]}" $QDRANT_HOST describe qdrant.Points
-"${docker_grpcurl[@]}" $QDRANT_HOST describe qdrant.Snapshots
-"${docker_grpcurl[@]}" $QDRANT_HOST describe qdrant.Qdrant
-"${docker_grpcurl[@]}" $QDRANT_HOST describe grpc.health.v1.Health
+"${docker_grpcurl[@]}" $TRECALL_HOST describe qdrant.Collections
+"${docker_grpcurl[@]}" $TRECALL_HOST describe qdrant.Points
+"${docker_grpcurl[@]}" $TRECALL_HOST describe qdrant.Snapshots
+"${docker_grpcurl[@]}" $TRECALL_HOST describe qdrant.Qdrant
+"${docker_grpcurl[@]}" $TRECALL_HOST describe grpc.health.v1.Health
 
 # use the reflection service to get the shape of a specific message
-"${docker_grpcurl[@]}" $QDRANT_HOST describe qdrant.UpsertPoints
+"${docker_grpcurl[@]}" $TRECALL_HOST describe qdrant.UpsertPoints
 
 # grpc protocol compliant health check
-"${docker_grpcurl[@]}" $QDRANT_HOST grpc.health.v1.Health/Check
+"${docker_grpcurl[@]}" $TRECALL_HOST grpc.health.v1.Health/Check
 
-#SAVED_POINTS_COUNT=$(curl --fail -s "http://$QDRANT_HOST/collections/test_collection" | jq '.result.points_count')
+#SAVED_POINTS_COUNT=$(curl --fail -s "http://$TRECALL_HOST/collections/test_collection" | jq '.result.points_count')
 #[[ "$SAVED_POINTS_COUNT" == "6" ]] || {
 #  echo 'check failed'
 #  exit 1
 #}
 #
-#curl -L -X POST "http://$QDRANT_HOST/collections/test_collection/points/search" \
+#curl -L -X POST "http://$TRECALL_HOST/collections/test_collection/points/search" \
 #  -H 'Content-Type: application/json' \
 #  --fail -s \
 #  --data-raw '{
@@ -358,7 +358,7 @@ set -e
 #        "limit": 3
 #    }' | jq
 #
-#curl -L -X POST "http://$QDRANT_HOST/collections/test_collection/points/search" \
+#curl -L -X POST "http://$TRECALL_HOST/collections/test_collection/points/search" \
 #  --fail -s \
 #  -H 'Content-Type: application/json' \
 #  --data-raw '{

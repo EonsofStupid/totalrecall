@@ -80,7 +80,7 @@ class TestLowDisk:
             name=f"qdrant-ood-{test_mode}-{unique_suffix}",
             mounts=[
                 Mount(
-                    target="/qdrant/storage",
+                    target="/trecall/storage",
                     source=None,
                     type="tmpfs",
                     tmpfs_size=10240000  # 10MB

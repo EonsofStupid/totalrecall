@@ -74,7 +74,7 @@ def test_resharding_abort(tmp_path: pathlib.Path):
 def test_resharding_abort_with_replicas(tmp_path: pathlib.Path):
     """
     Tests that resharding can be aborted after replication
-    Covers bug <https://github.com/qdrant/qdrant/pull/5792>.
+    Covers bug <https://github.com/trecall/pull/5792>.
     """
 
     # Bootstrap resharding cluster

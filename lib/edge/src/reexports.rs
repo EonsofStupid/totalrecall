@@ -1,4 +1,4 @@
-mod reexports_from_qdrant_crates {
+mod reexports_from_engine_crates {
     pub use segment::common::operation_error::{OperationError, OperationResult};
     pub use segment::data_types::facets::{FacetHit, FacetResponse, FacetValue, FacetValueHit};
     pub use segment::data_types::index::{
@@ -60,7 +60,7 @@ mod reexports_from_qdrant_crates {
     pub use shard::search::CoreSearchRequest as SearchRequest;
     pub use sparse::common::sparse_vector::SparseVector;
 }
-pub use reexports_from_qdrant_crates::*;
+pub use reexports_from_engine_crates::*;
 
 /// TODO: We need to do something these duplicates of Vector/Point structures
 mod todo_to_clean_up {
